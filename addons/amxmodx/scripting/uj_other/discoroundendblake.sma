@@ -7,8 +7,8 @@
 #include <uj_colorchat>
 
 
-public plugin_init() 
-{ 
+public plugin_init()
+{
 	register_plugin("RoundSound","1.0","PaintLancer")
 	register_event("SendAudio", "t_win", "a", "2&%!MRAD_terwin");
 	register_event("SendAudio", "ct_win", "a", "2&%!MRAD_ctwin");
@@ -23,12 +23,12 @@ public t_win()
 		case 0: client_cmd(0,"spk misc/roundend/t/riot");
 		case 1: client_cmd(0,"spk misc/roundend/t/jerk");
 		case 2: client_cmd(0,"spk misc/roundend/t/gangnam");
-		case 3: client_cmd(0,"spk misc/roundend/t/levels");		
+		case 3: client_cmd(0,"spk misc/roundend/t/levels");
 	}
-	
+
 	set_dhudmessage(255, 0, 0, -1.0, 0.20, 2, 6.0, 3.0, 0.1, 1.5);
 	show_dhudmessage(0, "Prisoners have taken over!");
-	
+
 	uj_colorchat_print(0, 0, "Prisoners Win.");
 	set_task(0.5,"DiscoMode",1337,"",0,"b");
 	client_cmd(0, "drop");
@@ -37,25 +37,25 @@ public t_win()
 
 public ct_win()
 {
-	
+
 
 	switch( random_num( 0, 3 ) )
 	{
 		case 0: client_cmd(0,"spk misc/roundend/ct/beatit");
 		case 1: client_cmd(0,"spk misc/roundend/ct/thrift");
 		case 2: client_cmd(0,"spk misc/roundend/ct/boom");
-		case 3: client_cmd(0,"spk misc/roundend/ct/victory");	
+		case 3: client_cmd(0,"spk misc/roundend/ct/victory");
 	}
-	
+
 	set_dhudmessage(0, 0, 255, -1.0, 0.20, 1, 6.0, 3.0, 0.1, 1.5);
 	show_dhudmessage(0, "Guards have maintained control of the prison!");
-	
+
 	uj_colorchat_print(0, 0, "Guards Win.");
 	set_task(0.5,"DiscoMode",1337,"",0,"b");
 	return PLUGIN_CONTINUE;
 }
 
-public plugin_precache() 
+public plugin_precache()
 {
 
 	precache_sound("misc/roundend/ct/beatit.wav");
@@ -65,10 +65,10 @@ public plugin_precache()
 	precache_sound("misc/roundend/t/riot.wav")
 	precache_sound("misc/roundend/t/gangnam.wav")
 	precache_sound("misc/roundend/t/levels.wav")
-	precache_sound("misc/roundend/t/jerk.wav")	
-	
+	precache_sound("misc/roundend/t/jerk.wav")
+
 	return PLUGIN_CONTINUE
-	
+
 }
 
 public DiscoMode()
@@ -92,7 +92,7 @@ public DiscoMode()
 		message_end()
 		set_user_rendering(players[i],kRenderFxGlowShell,num1,num2,num3,kRenderNormal,21)
 		//set_user_rendering(players[i],kRenderFxGlowShell,num1,num2,num3,kRenderTransAlpha,255)
-		
+
 	}
 }
 

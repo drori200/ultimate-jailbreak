@@ -34,7 +34,7 @@ const HAS_SHIELD = 1<<24;
 #define cs_set_user_team_index(%0,%1) set_pdata_int(%0, m_iTeam, %1, XO_PLAYER)
 
 new const PLUGIN_NAME[] = "[UJ] Day - Gun Game";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const DAY_NAME[] = "Gun Game";
@@ -53,7 +53,7 @@ new const g_szSound_Bell[] = "buttons/bell1.wav";
 
 //new const GHOSTBUSTERS_AMMO[] = "400";
 //new const GHOSTBUSTERS_HEALTH[] = "400";
-new const GunGameSounds[][] = { "powerdown.wav", "powerup.wav", "knife_level.wav",    
+new const GunGameSounds[][] = { "powerdown.wav", "powerup.wav", "knife_level.wav",
   "levelup.wav"
 };
 
@@ -227,7 +227,7 @@ public plugin_init()
 
   // CVars
   RegisterHam(Ham_TraceAttack, "func_door", "Fwd_DoorAttack");
-  RegisterHam(Ham_Touch, "weaponbox", "Fwd_PlayerWeaponTouch"); 
+  RegisterHam(Ham_Touch, "weaponbox", "Fwd_PlayerWeaponTouch");
   RegisterHam(Ham_Touch, "armoury_entity", "Fwd_PlayerWeaponTouch");
   RegisterHam(Ham_AddPlayerItem, "player", "Player_AddPlayerItem", 0);
   RegisterHam(Ham_Spawn, "player", "Fwd_PlayerSpawn_Post", 1);
@@ -236,7 +236,7 @@ public plugin_init()
   register_logevent( "EventJoinTeam", 3, "1=joined team" ); //gungame respawn on connect
   g_iHhTakeDamagePost = RegisterHam(Ham_TakeDamage, "player", "Player_TakeDamage_Post", 1);
   DisableHamForward(g_iHhTakeDamagePost);
-  
+
   g_iMaxPlayers   = get_maxplayers();
 }
 
@@ -289,7 +289,7 @@ start_day()
     new playerCount = uj_core_get_players(players, true, CS_TEAM_T);
     for (new i = 0; i < playerCount; ++i) {
       playerID = players[i];
-      
+
       // Give user items
       uj_core_strip_weapons(playerID);
       clear_bit(g_bSetFakeGodmode, playerID);
@@ -306,7 +306,7 @@ start_day()
     playerCount = uj_core_get_players(players, true, CS_TEAM_CT);
     for (new i = 0; i < playerCount; ++i) {
       playerID = players[i];
-      
+
       // Set user up with noclip
       uj_core_strip_weapons(playerID);
       clear_bit(g_bSetFakeGodmode, playerID);
@@ -349,7 +349,7 @@ end_day()
 
 
 public Fwd_DoorAttack(const door, const playerID, Float:damage, Float:direction[3], const tracehandle, const damagebits)
-{ 
+{
   if(is_valid_ent(door))
   {
     if (g_dayEnabled)
@@ -367,13 +367,13 @@ public Fwd_PlayerWeaponTouch(const iEntity, const playerID)
     return HAM_IGNORED;
 
   new Model[32];
-  pev(iEntity, pev_model, Model, 31);  
-        
+  pev(iEntity, pev_model, Model, 31);
+
   if (g_dayEnabled)
     if (!equal(Model, g_szWeaponModels[ g_iGunGameLevel[playerID][level] ]))
       return HAM_SUPERCEDE;
-  
-  
+
+
   return HAM_IGNORED;
 }
 
@@ -383,7 +383,7 @@ public Player_AddPlayerItem(const playerID, const iEntity)  //anti gun glitch
 
   if( !iWeapID )
     return HAM_IGNORED;
-    
+
   if (g_dayEnabled)
     if (iWeapID != CSW_KNIFE && iWeapID != g_iWeaponLevel[g_iGunGameLevel[playerID][level]])
     {
@@ -392,13 +392,13 @@ public Player_AddPlayerItem(const playerID, const iEntity)  //anti gun glitch
       return HAM_SUPERCEDE;
     }
 
-  
+
   return HAM_IGNORED;
 }
 
 stock GiveItem2(const playerID, const szItem, iAmmo = -1, bpAmmo = -1) {
   give_item(playerID, g_szWeaponNames[szItem]);
-  
+
   if(iAmmo >= 0) {
     new wepID = find_ent_by_owner(-1, g_szWeaponNames[szItem], playerID);
     if(wepID)
@@ -406,8 +406,8 @@ stock GiveItem2(const playerID, const szItem, iAmmo = -1, bpAmmo = -1) {
       cs_set_weapon_ammo(wepID, iAmmo);
     }
   }
-  
-  if(bpAmmo >= 0) 
+
+  if(bpAmmo >= 0)
     cs_set_user_bpammo(playerID, szItem, bpAmmo);
   else cs_set_user_bpammo(playerID, szItem, bpAmmo_default[szItem]);
 
@@ -415,30 +415,30 @@ stock GiveItem2(const playerID, const szItem, iAmmo = -1, bpAmmo = -1) {
 
 public Fwd_PlayerSpawn_Post(const playerID)
 {
-		
+
 	if (!is_user_alive(playerID))
 	    return HAM_HANDLED;
-    
+
 	set_bit(g_bIsAlive, playerID);
-  
+
 	//UTIL_ScreenFade(id, 2.0, 4.0);
-    
+
 	if(g_dayEnabled)
 	{
 	cs_set_user_armor(playerID, 100, CS_ARMOR_VESTHELM);
 	GiveItem2(playerID, g_iWeaponLevel[g_iGunGameLevel[playerID][level]]);
-    
+
 	}
-  
+
 	return HAM_HANDLED;
 }
 
 public client_putinserver(playerID) {
-	
+
 	clear_bit(g_bIsAlive, playerID);
 	if(bool:!is_user_hltv(playerID))
-		set_bit(g_bIsConnected, playerID);	
-	
+		set_bit(g_bIsConnected, playerID);
+
 }
 
 public client_disconnect(playerID)
@@ -454,10 +454,10 @@ public Fwd_PlayerDamage(const victim, const inflictor, const attacker, Float:dam
 
 	if(!IsPlayer( attacker ) || victim == attacker)
 		return HAM_IGNORED;
-		
+
 
 	if(g_dayEnabled)
-	{	
+	{
 		if(get_bit(g_bSetFakeGodmode, victim))
 		{
 			SetHamReturnInteger(0);
@@ -470,17 +470,17 @@ public Fwd_PlayerDamage(const victim, const inflictor, const attacker, Float:dam
 			EnableHamForward(g_iHhTakeDamagePost);
 			return HAM_HANDLED;
 		}
-		
+
 		if( cs_get_user_team(attacker) == CS_TEAM_CT && cs_get_user_team(victim) == CS_TEAM_T)
 		{
 		return HAM_SUPERCEDE;
 		}
-		
+
 		if( cs_get_user_team(attacker) == CS_TEAM_T && cs_get_user_team(victim) == CS_TEAM_CT)
 		{
 		return HAM_SUPERCEDE;
-		}		
-		
+		}
+
 	}
 
 	return HAM_IGNORED;
@@ -488,23 +488,23 @@ public Fwd_PlayerDamage(const victim, const inflictor, const attacker, Float:dam
 
 public Player_TakeDamage_Post(victim)
 {
-	/*if( g_iDay[ TOTAL_DAYS ] == DAY_DEATHMATCH 
-	|| g_iDay[ TOTAL_DAYS ] == DAY_GANG 
-	|| g_iDay[ TOTAL_DAYS ] == DAY_GRENADE 
-	|| g_bBoxMatch 
-	|| g_bSnowballWar 
+	/*if( g_iDay[ TOTAL_DAYS ] == DAY_DEATHMATCH
+	|| g_iDay[ TOTAL_DAYS ] == DAY_GANG
+	|| g_iDay[ TOTAL_DAYS ] == DAY_GRENADE
+	|| g_bBoxMatch
+	|| g_bSnowballWar
 	|| g_bGunGame)
 	{
 		cs_set_user_team_index(victim, g_iVictimTeam);
 		DisableHamForward( g_iHhTakeDamagePost );
-		
+
 		cs_set_user_team(victim, set_user_team);
-		//new sName[32]; get_user_name(victim, sName, charsmax(sName));	
+		//new sName[32]; get_user_name(victim, sName, charsmax(sName));
 		//fnColorPrint(0, "%s Your team is %d", sName,g_iVictimTeam);
 	}*/
 	cs_set_user_team_index(victim, g_iVictimTeam);
 	DisableHamForward( g_iHhTakeDamagePost );
-	
+
 	//cs_set_user_team(victim, set_user_team);
 }
 
@@ -533,11 +533,11 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
 {
   if (!IsPlayer(victim))
     return HAM_IGNORED;
-    
+
   if(g_dayEnabled)
   {
     new aName[32]; get_user_name(attacker, aName, charsmax(aName));
-    new sName[32]; get_user_name(victim, sName, charsmax(sName)); 
+    new sName[32]; get_user_name(victim, sName, charsmax(sName));
     if(get_bit(g_bIsAlive, attacker))
     {
       if(get_user_weapon(attacker) != CSW_KNIFE)
@@ -546,7 +546,7 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
         g_iGunGameLevelNext[attacker]++;
         uj_points_add(attacker, 1)
         set_user_health(attacker, 100);
-  
+
         if(g_iGunGameLevelNext[attacker] == 3)
         {
           g_iGunGameLevelNext[attacker] = 0;
@@ -554,11 +554,11 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
           StripPlayerWeapons(attacker);
           if(g_iGunGameLevel[attacker][level] <= 15)
             GiveItem2(attacker, g_iWeaponLevel[g_iGunGameLevel[attacker][level]]);
-          
+
           if(g_iGunGameLevel[attacker][level] <= 16)
 	  uj_colorchat_print(0, 0, "Gun-Game^3 %s^1 is on level^3 %s", aName, g_szGunGameNames[g_iGunGameLevel[attacker][level]]);
             //fnColorPrint(0, "Gun-Game^3 %s^1 is on level^3 %s", aName, g_szGunGameNames[g_iGunGameLevel[attacker][level]]);
-          if(g_iGunGameLevel[attacker][level] == 16)  
+          if(g_iGunGameLevel[attacker][level] == 16)
             emit_sound(0, CHAN_AUTO, GunGameSounds[2], 1.0, ATTN_NORM, 0, PITCH_NORM);
         }
         if(g_iGunGameLevelNext[attacker] < 3)
@@ -567,14 +567,14 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
 	 //fnColorPrint(attacker, "Gun-Game You need^3 %d^1 kills to advance.^3 %d / 3", 3-g_iGunGameLevelNext[attacker], g_iGunGameLevelNext[attacker]);
           new wepID = find_ent_by_owner(-1, g_szWeaponNames[g_iWeaponLevel[g_iGunGameLevel[attacker][level]]], attacker);
           if(wepID)
-            cs_set_weapon_ammo(wepID, g_iWeaponLevelRefillammo[g_iGunGameLevel[attacker][level]]);  
+            cs_set_weapon_ammo(wepID, g_iWeaponLevelRefillammo[g_iGunGameLevel[attacker][level]]);
         }
       }
       if(g_iGunGameLevel[attacker][level] < 16 && get_user_weapon(attacker) == CSW_KNIFE)
       {
         emit_sound(attacker, CHAN_AUTO, GunGameSounds[3], 1.0, ATTN_NORM, 0, PITCH_NORM);
         g_iGunGameLevelNext[attacker]++;
-  
+
         if(g_iGunGameLevelNext[attacker] == 3)
         {
           g_iGunGameLevelNext[attacker] = 0;
@@ -582,11 +582,11 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
           StripPlayerWeapons(attacker);
           if(g_iGunGameLevel[attacker][level] <= 15)
             GiveItem2(attacker, g_iWeaponLevel[g_iGunGameLevel[attacker][level]]);
-          
+
           if(g_iGunGameLevel[attacker][level] <= 16)
 	  uj_colorchat_print(0, 0, "Gun-Game^3 %s^1 is on level^3 %s", aName, g_szGunGameNames[g_iGunGameLevel[attacker][level]]);
             //fnColorPrint(0, "Gun-Game^3 %s^1 is on level^3 %s", aName, g_szGunGameNames[g_iGunGameLevel[attacker][level]]);
-          if(g_iGunGameLevel[attacker][level] == 16)  
+          if(g_iGunGameLevel[attacker][level] == 16)
             emit_sound(0, CHAN_AUTO, GunGameSounds[2], 1.0, ATTN_NORM, 0, PITCH_NORM);
         }
         if(g_iGunGameLevelNext[attacker] < 3)
@@ -595,7 +595,7 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
           //fnColorPrint(attacker, "Gun-Game You need^3 %d^1 kills to advance.^3 %d / 3", 3-g_iGunGameLevelNext[attacker], g_iGunGameLevelNext[attacker]);
           new wepID = find_ent_by_owner(-1, g_szWeaponNames[g_iWeaponLevel[g_iGunGameLevel[attacker][level]]], attacker);
           if(wepID)
-            cs_set_weapon_ammo(wepID, g_iWeaponLevelRefillammo[g_iGunGameLevel[attacker][level]]);  
+            cs_set_weapon_ammo(wepID, g_iWeaponLevelRefillammo[g_iGunGameLevel[attacker][level]]);
         }
       }
       if(g_iGunGameLevel[victim][level] > 0 && g_iGunGameLevel[attacker][level] < 16 && get_user_weapon(attacker) == CSW_KNIFE)
@@ -609,14 +609,14 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
         emit_sound(victim, CHAN_AUTO, GunGameSounds[0], 1.0, ATTN_NORM, 0, PITCH_NORM);
         emit_sound(attacker, CHAN_AUTO, GunGameSounds[1], 1.0, ATTN_NORM, 0, PITCH_NORM);
         set_user_health(attacker, 110);
-        uj_colorchat_print(0, 0, "Gun-Game^4 %s^1 has stolen a^3 level^1 from^4 %s", aName, sName);	
+        uj_colorchat_print(0, 0, "Gun-Game^4 %s^1 has stolen a^3 level^1 from^4 %s", aName, sName);
         //fnColorPrint(0, "Gun-Game^4 %s^1 has stolen a^3 level^1 from^4 %s", aName, sName);
       }
       if(g_iGunGameLevel[attacker][level] == 16 && get_user_weapon(attacker) == CSW_KNIFE && cs_get_user_team(attacker) == CS_TEAM_T)
       {
         uj_colorchat_print(0, 0, "Gun-Game^3 %s^1 has won the game!", aName);
         static iPlayers[32], iNum, i, iPlayer;
-        get_players( iPlayers, iNum, "ae", "TERRORIST"  ); 
+        get_players( iPlayers, iNum, "ae", "TERRORIST"  );
         for( i=0; i<iNum; i++ )
         {
           iPlayer = iPlayers[i];
@@ -626,7 +626,7 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
           {
             user_silentkill(iPlayer);
           }
-          
+
           if(g_iGunGameLevel[attacker][level] >= g_iGunGameLevel[iPlayer][level])
           {
             //g_iPoints[ attacker ] += ( 25 );
@@ -635,9 +635,9 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
             set_hudmessage(0, 255, 0, -1.0, 0.20, 1, 0.0, 5.0, 1.0, 1.0, -1);
             show_hudmessage(0, "%s has won the gungame!", aName);
           }
-          
-          
-          
+
+
+
         }
         emit_sound(0, CHAN_AUTO, g_szSound_Bell, 1.0, ATTN_NORM, 0, PITCH_NORM);
       }
@@ -650,14 +650,14 @@ public Fwd_PlayerKilled_Pre(victim, attacker, shouldgib)
     StripPlayerWeapons(victim);
     set_task(3.0, "gungamerespawn", victim);
   }
-    
-  clear_bit(g_bIsAlive, victim);    
+
+  clear_bit(g_bIsAlive, victim);
   return HAM_IGNORED;
 }
 
 stock StripPlayerWeapons(playerID)
 {
-    
+
 	for(new i=CSW_P228; i<=CSW_P90; i++)
 	{
 
@@ -667,94 +667,94 @@ stock StripPlayerWeapons(playerID)
 	}
 	if(HasShield(playerID))
 	{
-	strip_user_weapons(playerID); 
-    
+	strip_user_weapons(playerID);
+
 	}
 	give_item(playerID, "weapon_knife");
 	//for(new i=CSW_P228; i<=CSW_P90; i++)
 	//ham_strip_user_weapon(id, i);
 }
 
-stock ham_strip_user_weapon(playerID, iCswId, iSlot = 0, bool:bSwitchIfActive = true) 
-{ 
+stock ham_strip_user_weapon(playerID, iCswId, iSlot = 0, bool:bSwitchIfActive = true)
+{
   new iWeapon;
-  if( !iSlot ) 
-  { 
-    static const iWeaponsSlots[] = { 
-      -1, 
-      2, //CSW_P228 
-      -1, 
-      1, //CSW_SCOUT 
-      4, //CSW_HEGRENADE 
-      1, //CSW_XM1014 
-      5, //CSW_C4 
-      1, //CSW_MAC10 
-      1, //CSW_AUG 
-      4, //CSW_SMOKEGRENADE 
-      2, //CSW_ELITE 
-      2, //CSW_FIVESEVEN 
-      1, //CSW_UMP45 
-      1, //CSW_SG550 
-      1, //CSW_GALIL 
-      1, //CSW_FAMAS 
-      2, //CSW_USP 
-      2, //CSW_GLOCK18 
-      1, //CSW_AWP 
-      1, //CSW_MP5NAVY 
-      1, //CSW_M249 
-      1, //CSW_M3 
-      1, //CSW_M4A1 
-      1, //CSW_TMP 
-      1, //CSW_G3SG1 
-      4, //CSW_FLASHBANG 
-      2, //CSW_DEAGLE 
-      1, //CSW_SG552 
-      1, //CSW_AK47 
-      3, //CSW_KNIFE 
-      1 //CSW_P90 
+  if( !iSlot )
+  {
+    static const iWeaponsSlots[] = {
+      -1,
+      2, //CSW_P228
+      -1,
+      1, //CSW_SCOUT
+      4, //CSW_HEGRENADE
+      1, //CSW_XM1014
+      5, //CSW_C4
+      1, //CSW_MAC10
+      1, //CSW_AUG
+      4, //CSW_SMOKEGRENADE
+      2, //CSW_ELITE
+      2, //CSW_FIVESEVEN
+      1, //CSW_UMP45
+      1, //CSW_SG550
+      1, //CSW_GALIL
+      1, //CSW_FAMAS
+      2, //CSW_USP
+      2, //CSW_GLOCK18
+      1, //CSW_AWP
+      1, //CSW_MP5NAVY
+      1, //CSW_M249
+      1, //CSW_M3
+      1, //CSW_M4A1
+      1, //CSW_TMP
+      1, //CSW_G3SG1
+      4, //CSW_FLASHBANG
+      2, //CSW_DEAGLE
+      1, //CSW_SG552
+      1, //CSW_AK47
+      3, //CSW_KNIFE
+      1 //CSW_P90
     };
     iSlot = iWeaponsSlots[iCswId];
-  } 
-  
+  }
+
   const m_rgpPlayerItems_Slot0 = 367;
-  
-  iWeapon = get_pdata_cbase(playerID, m_rgpPlayerItems_Slot0 + iSlot, XO_PLAYER); 
-  
-  const XTRA_OFS_WEAPON = 4; 
-  const m_pNext = 42; 
-  const m_iId = 43; 
-  
-  while( iWeapon > 0 ) 
-  { 
-    if( get_pdata_int(iWeapon, m_iId, XTRA_OFS_WEAPON) == iCswId ) 
-    { 
-      break; 
-    } 
-    iWeapon = get_pdata_cbase(iWeapon, m_pNext, XTRA_OFS_WEAPON); 
-  } 
-  
-  if( iWeapon > 0 ) 
-  { 
-    if( bSwitchIfActive && get_pdata_cbase(playerID, m_pActiveItem, XO_PLAYER) == iWeapon ) 
-    { 
-      ExecuteHamB(Ham_Weapon_RetireWeapon, iWeapon); 
-    } 
-  
-    if( ExecuteHamB(Ham_RemovePlayerItem, playerID, iWeapon) ) 
-    { 
-      user_has_weapon(playerID, iCswId, 0); 
-      ExecuteHamB(Ham_Item_Kill, iWeapon); 
-      return 1; 
-    } 
-  } 
-  
+
+  iWeapon = get_pdata_cbase(playerID, m_rgpPlayerItems_Slot0 + iSlot, XO_PLAYER);
+
+  const XTRA_OFS_WEAPON = 4;
+  const m_pNext = 42;
+  const m_iId = 43;
+
+  while( iWeapon > 0 )
+  {
+    if( get_pdata_int(iWeapon, m_iId, XTRA_OFS_WEAPON) == iCswId )
+    {
+      break;
+    }
+    iWeapon = get_pdata_cbase(iWeapon, m_pNext, XTRA_OFS_WEAPON);
+  }
+
+  if( iWeapon > 0 )
+  {
+    if( bSwitchIfActive && get_pdata_cbase(playerID, m_pActiveItem, XO_PLAYER) == iWeapon )
+    {
+      ExecuteHamB(Ham_Weapon_RetireWeapon, iWeapon);
+    }
+
+    if( ExecuteHamB(Ham_RemovePlayerItem, playerID, iWeapon) )
+    {
+      user_has_weapon(playerID, iCswId, 0);
+      ExecuteHamB(Ham_Item_Kill, iWeapon);
+      return 1;
+    }
+  }
+
   return 0;
 }
 
 public EventJoinTeam()
 {
 	new iPlayer = GetLoguserIndex();
-	
+
 	if(g_dayEnabled)
 	{
 		set_task(3.0, "gungamerespawn", iPlayer);
@@ -765,9 +765,9 @@ GetLoguserIndex()
 {
     new szArg[61];
     read_logargv(0,szArg, charsmax(szArg));
-    
+
     new szName[32];
     parse_loguser(szArg, szName, charsmax(szName));
-    
+
     return get_user_index(szName);
 }

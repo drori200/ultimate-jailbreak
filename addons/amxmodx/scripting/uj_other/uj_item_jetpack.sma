@@ -13,7 +13,7 @@
 #include <uj_colorchat>
 
 new const PLUGIN_NAME[] = "[UJ] Item - Jetpack";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Jetpack";
@@ -50,7 +50,7 @@ public plugin_init()
 
   // Find the menu that item should appear in
   g_shopMenu = uj_menus_get_menu_id("Shop Menu");
-  
+
   RegisterHam( Ham_Player_Jump, "player", "bacon_playerJumping" );
 }
 
@@ -74,7 +74,7 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
   if (get_bit(g_hasItem, playerID)) {
     return UJ_ITEM_NOT_AVAILABLE;
   }
-  
+
   return UJ_ITEM_AVAILABLE;
 }
 
@@ -144,8 +144,8 @@ public client_putinserver(playerID)
 public rocket_effects(playerID)
 {
   if (get_bit(g_hasItem, playerID))
-  
-  //emit_sound(id, CHAN_ITEM, JETPACKFLIGHT, 1.0, ATTN_NORM, 0, PITCH_NORM);  
+
+  //emit_sound(id, CHAN_ITEM, JETPACKFLIGHT, 1.0, ATTN_NORM, 0, PITCH_NORM);
   set_task(2.5, "rocket_effects", playerID);
 }
 
@@ -158,22 +158,22 @@ public bacon_playerJumping( playerID )
     /* --| Get user origins from feet */
     new iOrigin[ 3 ];
     get_user_origin( playerID, iOrigin, 0 );
-    
+
     /* --| Modify origin a bit */
     iOrigin[ 2 ] -= 20;
-    
+
     /* --| Get player velocity */
     new Float:fVelocity[ 3 ];
     pev( playerID, pev_velocity, fVelocity );
-    
+
     /* --| Modify velocity a bit */
     fVelocity[ 2 ] += 13;
-    
+
     /* --| Set the player velocity and add a flame effect, jetpack style */
     set_pev( playerID, pev_velocity, fVelocity );
-    create_flame( iOrigin );  
+    create_flame( iOrigin );
   }
-} 
+}
 
 stock create_flame( origin[ 3 ] )
 {
@@ -197,7 +197,7 @@ public resetjetpack( playerID )
 
 public plugin_precache()
 {
-	
+
 	 gJetSprite = precache_model( "sprites/explode1.spr" );
-	
+
 }

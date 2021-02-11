@@ -4,7 +4,7 @@
 #include <uj_colorchat_const>
 
 new const PLUGIN_NAME[] = "UJ | Color Chat";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 load_metamod()

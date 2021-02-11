@@ -8,7 +8,7 @@
 #include <uj_requests>
 
 new const PLUGIN_NAME[] = "UJ | Gang Skill - Speed";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const SKILL_NAME[] = "Speed";

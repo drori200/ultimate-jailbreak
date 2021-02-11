@@ -18,7 +18,7 @@
 #define EXPLODE_RADIUS 300.0
 
 new const PLUGIN_NAME[] = "UJ | Request - Kamikaze";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const REQUEST_NAME[] = "Kamikaze";
@@ -50,7 +50,7 @@ public plugin_init()
 
   //g_iMaxPlayers   = get_maxplayers();
   g_iMsgDeath   = get_user_msgid("DeathMsg");
-  g_iMsgScoreInfo   = get_user_msgid("ScoreInfo");  
+  g_iMsgScoreInfo   = get_user_msgid("ScoreInfo");
 }
 
 public uj_fw_requests_select_pre(playerID, requestID, menuID)
@@ -79,7 +79,7 @@ public uj_fw_requests_select_post(playerID, targetID, requestID)
   // This is not our request
   if (requestID != g_request)
     return;
-    
+
   start_request(playerID, targetID);
 }
 
@@ -87,30 +87,30 @@ start_request(playerID, targetID)
 {
   if(!g_requestEnabled) {
     g_requestEnabled = true;
-  
+
   // Strip users of weapons, and give out scourts and knives
   uj_core_strip_weapons(playerID);
   uj_core_strip_weapons(targetID);
   explode_me(playerID);
   // cs_set_user_bpammo(playerID, CSW_SCOUT, ammoCount);
   // cs_set_user_bpammo(targetID, CSW_SCOUT, ammoCount);
-  
+
   // Do not allow participants to pick up any guns
   uj_core_block_weapon_pickup(playerID, true);
   uj_core_block_weapon_pickup(targetID, true);
-  
+
   // Set health
   set_pev(playerID, pev_health, 100.0);
   set_pev(targetID, pev_health, 100.0);
-  
+
   // Give armor
   cs_set_user_armor(playerID, 100, CS_ARMOR_VESTHELM)
   cs_set_user_armor(targetID, 100, CS_ARMOR_VESTHELM)
-  
+
   // Find gravity setting
-  
+
   // Set low gravity
-  
+
   g_playerID = playerID;
   g_targetID = targetID;
 }
@@ -120,13 +120,13 @@ public uj_fw_requests_end(requestID)
 // If requestID refers to our request and our request is enabled
   if(requestID == g_request && g_requestEnabled) {
     g_requestEnabled = false;
-    
+
     uj_core_strip_weapons(g_playerID);
     uj_core_strip_weapons(g_targetID);
-    
+
     set_user_gravity(g_playerID, 1.0);
     set_user_gravity(g_targetID, 1.0);
-    
+
     uj_core_block_weapon_pickup(g_playerID, false);
     uj_core_block_weapon_pickup(g_targetID, false);
   }
@@ -142,7 +142,7 @@ public explode_me(id) {
   pev(id, pev_origin, explosion);
 
   user_kill(id);
-  
+
   // create explosion
   message_begin(MSG_BROADCAST, SVC_TEMPENTITY);
   write_byte(TE_EXPLOSION);
@@ -164,44 +164,44 @@ stock fm_radius_damage(id, Float:orig[3], Float:dmg , Float:rad, wpnName[]="") {
   Ent = -1;
   while((Ent = engfunc(EngFunc_FindEntityInSphere, Ent, orig, rad))) {
     pev(Ent,pev_classname,szClassname,32);
-    if(equali(szClassname, "player") 
+    if(equali(szClassname, "player")
     && is_user_connected(Ent)
     && is_user_alive(Ent))
-    //&& get_bit(g_bIsConnected, Ent) 
+    //&& get_bit(g_bIsConnected, Ent)
     //&& get_bit(g_bIsAlive, Ent) )
     {
       pev(Ent, pev_health, Health);
       Health -= dmg;
-      
+
       new szName[32], szName1[32];
       get_user_name(Ent, szName, charsmax(szName));
       get_user_name(id, szName1, charsmax(szName1));
-      
-      if(Health <= 0.0) 
+
+      if(Health <= 0.0)
         createKill(Ent, id, wpnName);
       else set_pev(Ent, pev_health, Health);
     }
-  }             
+  }
 }
 
 // stock for create kill
 stock createKill(id, attacker, weaponDescription[]) {
   new szFrags, szFrags2;
-  
+
   if(id != attacker) {
     szFrags = get_user_frags(attacker);
     set_user_frags(attacker, szFrags + 1);
     logKill(attacker, id, weaponDescription);
-       
+
     //Kill the victim and block the messages
     set_msg_block(g_iMsgDeath,BLOCK_ONCE);
     set_msg_block(g_iMsgScoreInfo,BLOCK_ONCE);
     user_kill(id);
-      
+
     //user_kill removes a frag, this gives it back
     szFrags2 = get_user_frags(id);
     set_user_frags(id, szFrags2 + 1);
-      
+
     //Replaced HUD death message
     message_begin(MSG_ALL, g_iMsgDeath,{0,0,0},0);
     write_byte(attacker);
@@ -209,7 +209,7 @@ stock createKill(id, attacker, weaponDescription[]) {
     write_byte(0);
     write_string(weaponDescription);
     message_end();
-      
+
     //Update killers scorboard with new info
     message_begin(MSG_ALL, g_iMsgScoreInfo);
     write_byte(attacker);
@@ -218,7 +218,7 @@ stock createKill(id, attacker, weaponDescription[]) {
     write_short(0);
     write_short(get_user_team(attacker));
     message_end();
-      
+
     //Update victims scoreboard with correct info
     message_begin(MSG_ALL, g_iMsgScoreInfo);
     write_byte(id);
@@ -227,7 +227,7 @@ stock createKill(id, attacker, weaponDescription[]) {
     write_short(0);
     write_short(get_user_team(id));
     message_end();
-    
+
     new szName[32], szName1[32];
     get_user_name(id, szName, charsmax(szName));
     get_user_name(attacker, szName1, charsmax(szName1));
@@ -237,17 +237,17 @@ stock createKill(id, attacker, weaponDescription[]) {
 // stock for log kill
 stock logKill(id, victim, weaponDescription[] ) {
   new namea[32],namev[32],authida[35],authidv[35],teama[16],teamv[16];
-   
+
   //Info On Attacker
   get_user_name(id,namea,charsmax(namea));
   get_user_team(id,teama,15);
   get_user_authid(id,authida,34);
-   
+
   //Info On Victim
   get_user_name(victim,namev,charsmax(namev));
   get_user_team(victim,teamv,15);
   get_user_authid(victim,authidv,34);
-   
+
   //Log This Kill
   if(id != victim)
     log_message("^"%s<%d><%s><%s>^" killed ^"%s<%d><%s><%s>^" with ^"%s^"",

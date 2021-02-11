@@ -5,7 +5,7 @@
 #include <fg_colorchat>
 
 new const PLUGIN_NAME[] = "UJ | Tool - Entities";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 public plugin_init()
@@ -105,9 +105,9 @@ public find_button(playerID)
 {
   new szTempClass[64];
   new szTempEnt;
-  
+
   szTempEnt = GetAimingEnt(playerID);
-  
+
   if(pev_valid(szTempEnt)) {
     entity_get_string(szTempEnt, EV_SZ_classname, szTempClass, charsmax(szTempClass));
     fg_colorchat_print(playerID, playerID, "ID: %i, classname: %s", szTempEnt, szTempClass);
@@ -119,19 +119,19 @@ public find_button(playerID)
 GetAimingEnt(id)
 {
   static Float:start[3], Float:view_ofs[3], Float:dest[3], i;
-  
+
   pev(id, pev_origin, start);
   pev(id, pev_view_ofs, view_ofs);
-  
+
   for( i = 0; i < 3; i++ )
   {
     start[i] += view_ofs[i];
   }
-  
+
   pev(id, pev_v_angle, dest);
   engfunc(EngFunc_MakeVectors, dest);
   global_get(glb_v_forward, dest);
-  
+
   for( i = 0; i < 3; i++ )
   {
     dest[i] *= 9999.0;
@@ -139,7 +139,7 @@ GetAimingEnt(id)
   }
 
   engfunc(EngFunc_TraceLine, start, dest, DONT_IGNORE_MONSTERS, id, 0);
-  
+
   return get_tr2(0, TR_pHit);
 }
 

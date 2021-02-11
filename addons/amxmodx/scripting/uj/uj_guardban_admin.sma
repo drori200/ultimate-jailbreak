@@ -5,7 +5,7 @@
 #include <uj_logs>
 
 new const PLUGIN_NAME[] = "UJ | Guardban - Admin";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 public plugin_init()

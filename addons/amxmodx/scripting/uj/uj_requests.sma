@@ -10,7 +10,7 @@
 #include <uj_requests_const>
 
 new const PLUGIN_NAME[] = "UJ | Requests";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 // For glow effects

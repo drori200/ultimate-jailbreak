@@ -22,7 +22,7 @@
 //#define FLASH_ALPHA	255
 
 new const PLUGIN_NAME[] = "[UJ] Item - Blinding Flashlight";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Blinding Flashlight";
@@ -43,26 +43,26 @@ new bool:g_flashlight[MAX_CLIENTS + 1]
 new Float:g_flash_until[MAX_CLIENTS + 1]
 
 new g_msgid_screen_fade
-new 
+new
 bool:g_bFF,
 bool:g_bUnderCS
-new 
+new
 g_iHitPlaceFlags,
-g_iMaxDist, 
-g_iMinDist, 
+g_iMaxDist,
+g_iMinDist,
 g_iDeltaDist,
-g_iMaxBlend, 
-g_iMinBlend, 
+g_iMaxBlend,
+g_iMinBlend,
 g_iDeltaBlend
-new 
+new
 Float:g_fMaxImpcatTime,
 Float:g_fFxFactor
-new 
+new
 g_pcvar_ff,
-g_cvarMaxDist, 
-g_cvarMinDist, 
-g_cvarMaxImpactTime, 
-g_cvarMaxBlend, 
+g_cvarMaxDist,
+g_cvarMinDist,
+g_cvarMaxImpactTime,
+g_cvarMaxBlend,
 g_cvarMinBlend,
 g_cvarHitPlace,
 g_cvarFxFactor
@@ -74,21 +74,21 @@ new g_hasItem;
 public plugin_init()
 {
 	register_plugin(PLUGIN_NAME, PLUGIN_VERS, PLUGIN_AUTH);
-	
+
 	// Register CVars
 	g_costCVar = register_cvar("uj_item_bflashlight_cost", ITEM_COST);
 	g_rebelCVar = register_cvar("uj_item_bflashlight_rebel", ITEM_REBEL);
-	
+
 	// Register this item
 	g_item = uj_items_register(ITEM_NAME, ITEM_MESSAGE, g_costCVar, g_rebelCVar);
-	
+
 	// Find the menu that item should appear in
 	g_shopMenu = uj_menus_get_menu_id("Shop Menu");
 	g_bUnderCS = bool:cstrike_running()
 	g_msgid_screen_fade = get_user_msgid("ScreenFade")
-		
+
 	// NOTE: actual distance is further but it's already long enough
-	g_cvarMaxDist = register_cvar("bf_maxdistance", "1500") 
+	g_cvarMaxDist = register_cvar("bf_maxdistance", "1500")
 	// NOTE: this is exact length when strength of light stays constant
 	// (used Zoom Info plugin & AWP weapon)
 	g_cvarMinDist = register_cvar("bf_mindistance", "500")
@@ -98,14 +98,14 @@ public plugin_init()
 	g_cvarHitPlace = register_cvar("bf_hitplace", "b")
 	g_cvarFxFactor = register_cvar("bf_fxfactor", "4.0")
 	//g_cvarNotify = register_cvar("bc_notify", "vc")
-	
+
 	register_event("Flashlight", "event_flashlight", "be")  // alive
 	register_event("Health", "event_notalive", "bd", "1=0") // dead
 	if(g_bUnderCS)
 		register_event("HLTV", "event_new_round", "a", "1=0", "2=0")
-	
-	register_forward(FM_PlayerPreThink, "forward_player_prethink")  
-	
+
+	register_forward(FM_PlayerPreThink, "forward_player_prethink")
+
 }
 
 /*
@@ -118,17 +118,17 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
 	if (itemID != g_item) {
 		return UJ_ITEM_AVAILABLE;
 	}
-	
+
 	// Only display if it appears in the menu we retrieved in plugin_init()
 	if (menuID != g_shopMenu) {
 		return UJ_ITEM_DONT_SHOW;
 	}
-	
+
 	// If the specified user is already invisible, hide item from menus
 	if (get_bit(g_hasItem, playerID)) {
 		return UJ_ITEM_NOT_AVAILABLE;
 	}
-	
+
 	return UJ_ITEM_AVAILABLE;
 }
 
@@ -140,7 +140,7 @@ public uj_fw_items_select_post(playerID, itemID, menuID)
 	// This is not our item - do not continue
 	if (g_item != itemID)
 		return;
-	
+
 	give_shopitem(playerID);
 }
 
@@ -155,7 +155,7 @@ public uj_fw_items_strip_item(playerID, itemID)
 	(itemID != UJ_ITEM_ALL_ITEMS)) {
 		return;
 	}
-	
+
 	remove_item(playerID);
 }
 
@@ -163,11 +163,11 @@ give_shopitem(playerID)
 {
 if (!get_bit(g_hasItem, playerID)) {
 	// Find transparency level
-	
+
 	// Glow user and set bit
 	set_bit(g_hasItem, playerID);
 	g_flashlight[playerID] = true;
-	
+
 }
 return PLUGIN_HANDLED;
 }
@@ -250,7 +250,7 @@ bool:flash_player(attacker, victim, Float:distance)
 	if(g_flash_until[victim] > gametime)
 		// flash is still active
 		return false
-	
+
 	static iAlpha
 	static Float:holdtime, Float:duration
 
@@ -261,13 +261,13 @@ bool:flash_player(attacker, victim, Float:distance)
 		g_flash_until[victim] = gametime + 0.1
 		return false
 	}
-	
+
 	static Float:fOrigin[3]
 	pev(attacker, pev_origin, fOrigin)
 	if(!fm_is_in_viewcone(victim, fOrigin))
 		// victim can't see the light
 		return false
-	
+
 	static Float:holdtime_sec; holdtime_sec = holdtime / C_FLASHTIME
 
 	g_flash_until[victim] = gametime + holdtime_sec
@@ -328,7 +328,7 @@ stock getScreenFadeParams(const Float:distance, &Float:holdtime, &Float:duration
 		static Float:fPercent; fPercent = (g_iMaxDist - distance) / g_iDeltaDist
 		holdtime = fPercent * g_fMaxImpcatTime
 		normFlashtimeVal(holdtime)
-		
+
 		if(holdtime)
 		{
 			alpha = floatround(g_iMinBlend + g_iDeltaBlend * fPercent)
@@ -337,9 +337,9 @@ stock getScreenFadeParams(const Float:distance, &Float:holdtime, &Float:duration
 		else
 			alpha = 0
 	}
-	
+
 	if(holdtime)
-	{	
+	{
 		duration = g_fFxFactor * holdtime
 		normFlashtimeVal(duration)
 	}
@@ -351,7 +351,7 @@ stock storeCVars()
 {
 	if(g_pcvar_ff)
 		g_bFF = bool:get_pcvar_num(g_pcvar_ff)
-	
+
 	g_iHitPlaceFlags = getPCvarAsFlags(g_cvarHitPlace)
 	g_iMinDist = get_pcvar_num(g_cvarMinDist)
 	g_iMaxDist = get_pcvar_num(g_cvarMaxDist)
@@ -359,20 +359,20 @@ stock storeCVars()
 		g_iMaxDist = 0
 	if(g_iMinDist > g_iMaxDist)
 		g_iMinDist = g_iMaxDist
-	
+
 	g_iDeltaDist = g_iMaxDist - g_iMinDist
 
 	g_fMaxImpcatTime = get_pcvar_float(g_cvarMaxImpactTime) * C_FLASHTIME
 	normFlashtimeVal(g_fMaxImpcatTime)
-	
+
 	g_iMaxBlend = get_pcvar_num(g_cvarMaxBlend)
 	normBlendVal(g_iMaxBlend)
 	g_iMinBlend = get_pcvar_num(g_cvarMinBlend)
 	if(g_iMinBlend > g_iMaxBlend)
 		g_iMinBlend = g_iMaxBlend
-	else	
+	else
 	    normBlendVal(g_iMinBlend)
-	
+
 	g_iDeltaBlend = g_iMaxBlend - g_iMinBlend
 
 	g_fFxFactor = get_pcvar_float(g_cvarFxFactor)
@@ -399,9 +399,9 @@ stock normFlashtimeVal(&Float:val)
 stock getPCvarAsFlags(pcvar)
 {
     static sValue[27]
-    
+
     get_pcvar_string(pcvar, sValue, sizeof(sValue) - 1)
-    
+
     return read_flags(sValue)
 }
 //-----------------------------------------------------------------------------

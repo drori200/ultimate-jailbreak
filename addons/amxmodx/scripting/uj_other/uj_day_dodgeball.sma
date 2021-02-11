@@ -14,9 +14,9 @@
 #define Task_Dodgeball	481541
 #define PlayWavSound(%1,%2)		client_cmd(%1, "spk ^"%s^"", %2)
 
-new const PLUGIN_NAME[] = "[UJ] Day - Dodgeball";
-new const PLUGIN_AUTH[] = "eDeloa";
-new const PLUGIN_VERS[] = "v0.1";
+new const PLUGIN_NAME[] = "[sG] Day - Dodgeball";
+new const PLUGIN_AUTH[] = "Broduer40";
+new const PLUGIN_VERS[] = "v0.2";
 
 new const DAY_NAME[] = "Dodgeball";
 new const DAY_OBJECTIVE[] = "If you can dodge a wrench, you can dodge a ball";
@@ -42,7 +42,7 @@ new g_menuSpecial
 new	 HamHook: HamTakeDamage
 
 	, g_pCountdown
-	
+
 	, g_iCounter
 
 	, g_iMsgTextMsg
@@ -52,14 +52,14 @@ public plugin_precache()
 {
   // Register day
   g_day = uj_days_register(DAY_NAME, DAY_OBJECTIVE, DAY_SOUND)
-  
+
   //precache_sound(g_szDaySound);
   precache_sound(g_szSoundBallBounce);
-	
+
   precache_model(g_szViewDodgeball);
   precache_model(g_szPlayerDodgeball);
-  precache_model(g_szWorldDodgeball);  
-  
+  precache_model(g_szWorldDodgeball);
+
 }
 
 public plugin_init()
@@ -70,29 +70,29 @@ public plugin_init()
 	g_menuSpecial = uj_menus_get_menu_id("Special Days");
 
 	// CVars
-  
+
 	g_pCountdown = register_cvar("ddm_dodgeball_countdown", "10.0");
-  
+
 	//forwards
-  
+
 	register_forward(FM_SetModel, "FwdSetModel");
 	register_forward(FM_EmitSound, "FwdEmitSound");
-  
+
   	register_touch("player", "grenade", "FwdPlayerNadeTouch");
-	
+
 	RegisterHam(Ham_Spawn, "player", "FwdPlayerSpawnPost", 1);
 	HamTakeDamage = RegisterHam(Ham_TakeDamage, "player", "FwdPlayerTakeDamagePre", 0);
 	DisableHamForward(HamTakeDamage);
 	RegisterHam(Ham_Weapon_PrimaryAttack, "weapon_knife", "FwdKnifeAttackPre", 0);
 	RegisterHam(Ham_Weapon_SecondaryAttack, "weapon_knife", "FwdKnifeAttackPre", 0);
-	
+
 	register_message(get_user_msgid("SendAudio"), "MsgSendAudio");
-	
+
 	register_event("CurWeapon", "EventCurWeapon", "be", "1=1")
-	
+
 	g_iMsgTextMsg = get_user_msgid("TextMsg");
-  
-  
+
+
 }
 
 public uj_fw_days_select_pre(playerID, dayID, menuID)
@@ -125,7 +125,7 @@ public uj_fw_days_select_post(playerID, dayID)
 	start_day();
   	set_task(1.0, "TaskStartDodgeballDay", Task_Dodgeball, _, _, "a", (g_iCounter = get_pcvar_num(g_pCountdown)) + 1);
 	EnableHamForward(HamTakeDamage);
-  
+
 }
 
 public uj_fw_days_end(dayID)
@@ -147,7 +147,7 @@ start_day()
     new playerCount = uj_core_get_players(players, true, CS_TEAM_T);
     for (new i = 0; i < playerCount; ++i) {
       playerID = players[i];
-      
+
       // Give user items
       uj_core_strip_weapons(playerID);
       give_item(playerID, "weapon_hegrenade");
@@ -157,7 +157,7 @@ start_day()
     playerCount = uj_core_get_players(players, true, CS_TEAM_CT);
     for (new i = 0; i < playerCount; ++i) {
       playerID = players[i];
-      
+
       // Set user up with noclip
       uj_core_strip_weapons(playerID);
       give_item(playerID, "weapon_hegrenade");
@@ -210,11 +210,11 @@ public TaskStartDodgeballDay()
 			playerID = players[i];
 			{
 				playerID = players[i];
-			
+
 				uj_core_strip_weapons(playerID);
 				give_item(playerID, "weapon_hegrenade");
 				cs_set_user_bpammo(playerID, CSW_HEGRENADE, 5);
-			
+
 			}
 		}
 	}
@@ -223,17 +223,17 @@ public TaskStartDodgeballDay()
 public FwdSetModel(iEntity, const szModel[])
 {
 	if(g_dayEnabled
-	&& pev_valid(iEntity) 
+	&& pev_valid(iEntity)
 	&& equal(szModel, "models/w_hegrenade.mdl"))
-	{				
+	{
 		//new iOwner = pev(iEntity, pev_owner);
-		
+
 		entity_set_model(iEntity, g_szWorldDodgeball);
 		set_pev(iEntity, pev_dmgtime, 9999.0);
-			
+
 		return FMRES_SUPERCEDE;
 	}
-	
+
 	return FMRES_IGNORED;
 }
 
@@ -244,15 +244,15 @@ public FwdEmitSound(id, iChannel, const szSound[], Float: flVolume, Float: iAttn
 		if(is_user_alive(id)
 		&& equal(szSound, "weapons/knife_deploy1.wav"))
 			return FMRES_SUPERCEDE;
-		
+
 		else if(equal(szSound, "weapons/he_bounce-1.wav"))
 		{
 			emit_sound(id, CHAN_AUTO, g_szSoundBallBounce, flVolume * 2.5, iAttn, iFlags, PITCH_HIGH);
 			return FMRES_SUPERCEDE;
-			
+
 		}
 	}
-		
+
 	return FMRES_IGNORED;
 }
 
@@ -262,23 +262,23 @@ public FwdPlayerNadeTouch(id, iNade)
 	&& is_user_alive(id))
 	{
 		if(pev(iNade, pev_flags) & FL_ONGROUND)
-		{	
+		{
 			if(user_has_weapon(id, CSW_HEGRENADE))
 			{
 				PlayWavSound(id, g_szSoundBallPickup);
 				cs_set_user_bpammo(id, CSW_HEGRENADE, cs_get_user_bpammo(id, CSW_HEGRENADE) + 1);
 			}
-			
+
 			else
 				give_item(id, "weapon_hegrenade");
-				
+
 			remove_entity(iNade);
 		}
-		
-		else 
+
+		else
 		{
 			new iAttacker = pev(iNade, pev_iuser1);
-			
+
 			if(id != iAttacker
 			&& is_user_connected(iAttacker))
 			{
@@ -286,9 +286,9 @@ public FwdPlayerNadeTouch(id, iNade)
 				{
 					//emit_sound(id, CHAN_AUTO, g_szDeathSounds[random(sizeof(g_szDeathSounds))]
 					//	, 1.0, ATTN_NORM, 0, PITCH_NORM);
-						
-					ExecuteHamB(Ham_Killed, id, iAttacker, 1);	
-					
+
+					ExecuteHamB(Ham_Killed, id, iAttacker, 1);
+
 					new players[32], playerID;
 					new playerCount = uj_core_get_players(players, true, CS_TEAM_T);
 					for (new i = 0; i < playerCount; ++i)
@@ -297,12 +297,12 @@ public FwdPlayerNadeTouch(id, iNade)
 						{
 							if(!playerID)
 							{
-						
+
 							uj_core_strip_weapons(playerID);
 
-						
-							}					
-					
+
+							}
+
 						}
 					}
 				}
@@ -320,9 +320,9 @@ public FwdPlayerSpawnPost(id)
 		{
 			give_item(id, "weapon_hegrenade");
 			cs_set_user_bpammo(id, CSW_HEGRENADE, 5);
-			
+
 		}
-		
+
 	}
 }
 
@@ -331,12 +331,12 @@ public FwdPlayerTakeDamagePre(iVictim, iInflictor, iAttacker, Float:flDamage, iD
 		&& cs_get_user_team(iVictim) == cs_get_user_team(iAttacker)))
 		? HAM_SUPERCEDE : HAM_IGNORED;
 
-	
+
 
 public FwdKnifeAttackPre(iKnife)
 	return g_dayEnabled ? HAM_SUPERCEDE : HAM_IGNORED;
-	
-	
+
+
 public grenade_throw(id, iNade, iWeaponid)
 {
 	if(g_dayEnabled
@@ -344,7 +344,7 @@ public grenade_throw(id, iNade, iWeaponid)
 	{
 		set_pev(iNade, pev_iuser1, id);
 		entity_set_size(iNade,Float:{-6.0,-6.0,-6.0},Float:{6.0,6.0,6.0});
-		
+
 		set_task(0.3, "TaskClearBallOwner", iNade);
 		set_task(5.0, "TaskStopRolling", iNade);
 	}
@@ -357,14 +357,14 @@ public MsgSendAudio(iMsgid, iMsgDest, id)
 	{
 		new szSound[20];
 		get_msg_arg_string(2, szSound, charsmax(szSound));
-		
+
 		if(equal(szSound, "%!MRAD_FIREINHOLE"))
 		{
 			set_msg_block(g_iMsgTextMsg, BLOCK_ONCE);
 			return PLUGIN_HANDLED;
 		}
 	}
-	
+
 	return PLUGIN_CONTINUE;
 }
 
@@ -379,7 +379,7 @@ public EventCurWeapon(id)
 			set_pev(id, pev_viewmodel2, g_szViewDodgeball);
 			set_pev(id, pev_weaponmodel2, g_szPlayerDodgeball);
 		}
-		
+
 		else if(iWeapon == CSW_KNIFE)
 		{
 			set_pev(id, pev_viewmodel2, "");
@@ -404,7 +404,7 @@ public TaskStopRolling(iNade)
 			set_pev(iNade, pev_velocity, Float: {0.0, 0.0, 0.0});
 			set_pev(iNade, pev_gravity, 1.0);
 		}
-		
+
 		else
 			set_task(5.0, "TaskStopRolling", iNade);
 	}

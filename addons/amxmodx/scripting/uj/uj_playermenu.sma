@@ -4,7 +4,7 @@
 #include <xs>
 
 new const PLUGIN_NAME[] = "UJ | Player Menu";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 // CS Player PData Offsets (win32)

@@ -5,7 +5,7 @@
 //#include <uj_requests>
 
 new const PLUGIN_NAME[] = "UJ | Misc - VoiceManager";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 #define ADMIN_VOICE ADMIN_LEVEL_E

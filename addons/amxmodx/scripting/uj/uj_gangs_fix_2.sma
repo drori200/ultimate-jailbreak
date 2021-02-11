@@ -3,7 +3,7 @@
 #include <uj_gang_skill_db>
 
 new const PLUGIN_NAME[] = "[UJ] Gangs - Fix 2";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 public plugin_init()

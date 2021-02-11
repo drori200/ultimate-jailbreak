@@ -6,7 +6,7 @@
 #include <uj_items>
 
 new const PLUGIN_NAME[] = "UJ | Item - Freeday";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Supra's Freeday";

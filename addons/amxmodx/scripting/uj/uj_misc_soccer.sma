@@ -13,7 +13,7 @@
 #define FLAG_ADMIN ADMIN_LEVEL_A
 
 new const PLUGIN_NAME[] = "UJ | Misc - Soccer"
-new const PLUGIN_AUTHOR[] = "eDeloa"
+new const PLUGIN_AUTHOR[] = "Broduer40"
 new const PLUGIN_VERSION[] = "v0.1"
 
 static const g_szBallBounce[] = "ultimate_jailbreak/bounce.wav"

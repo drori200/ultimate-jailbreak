@@ -41,7 +41,7 @@ const HAS_SHIELD = 1<<24;
 #define m_iUserPrefs     510
 
 new const PLUGIN_NAME[] = "[UJ] Day - Paintball";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const DAY_NAME[] = "Paintball";
@@ -70,7 +70,7 @@ new g_iWeaponAmmo[33][CSW_P90+1];
 
 //sprint
 
-new Float: userSprintLast[33], Float: userSprintLastBat[33], Float: userSprintSound[33] 
+new Float: userSprintLast[33], Float: userSprintLastBat[33], Float: userSprintSound[33]
 new userSprintSpeed[33], userSprintTiredness[33], userSprintAdvised[33]
 new userWeapon[33][32]
 new pbmoves, verbose, use_batmeter, rechargetime, max_stamina
@@ -112,10 +112,10 @@ new g_menuSpecial
 public plugin_init()
 {
 	register_plugin(PLUGIN_NAME, PLUGIN_VERS, PLUGIN_AUTH);
-	
 
-	register_forward(FM_CmdStart, "fw_cmdstart");	
-	
+
+	register_forward(FM_CmdStart, "fw_cmdstart");
+
 	// Find all valid menus to display this under
 	g_menuSpecial = uj_menus_get_menu_id("Special Days");
 	RegisterHam(Ham_AddPlayerItem, "player", "Player_AddPlayerItem", 0);
@@ -127,20 +127,20 @@ public plugin_init()
 	register_message(g_iMsgSayText, "MsgSayText");
 	g_iMsgSayText   = get_user_msgid("SayText");
 	//g_iMaxPlayers   = get_maxplayers();
-	
-	
+
+
 	if (get_pcvar_num(pbgun))// || get_pcvar_num(pbusp) || get_pcvar_num(pbglock))
 	{
 		register_event("CurWeapon", "ev_curweapon", "be");
 		register_logevent("ev_roundstart", 2, "0=World triggered", "1=Round_Start");
 		if (get_cvar_num("mp_freezetime") > 0)
 			register_event("HLTV", "ev_freezetime", "a", "1=0", "2=0");
-		
+
 		register_forward(FM_Touch, "fw_touch");
 		register_forward(FM_SetModel, "fw_setmodel");
 		register_forward(FM_PlayerPreThink, "fw_playerprethink", 1);
 		register_forward(FM_UpdateClientData, "fw_updateclientdata", 1);
-		
+
 		color = register_cvar("pbgun_color", "2");
 		shots = register_cvar("pbgun_shots", "10");
 		veloc = register_cvar("pbgun_velocity", "2000");
@@ -150,7 +150,7 @@ public plugin_init()
 		bglow = register_cvar("pbgun_glow", "a");
 		damge = register_cvar("pbgun_damage", "99");
 		friendlyfire = get_cvar_pointer("mp_friendlyfire");
-		
+
 		new a, max_ents_allow = global_get(glb_maxEntities) - 5;
 		for (a = 1; a <= get_pcvar_num(shots); a++)
 			if (a < MAX_PAINTBALLS)
@@ -165,9 +165,9 @@ public plugin_init()
 		}
 		if (g_pbcount < 1)
 			set_fail_state("[AG] Failed to load Paintball Gun (unable to create ents)");
-		
+
 		server_print("*** %s by %s Enabled ***", PLUGIN_NAME, PLUGIN_AUTH);
-	}	
+	}
 }
 
 public uj_fw_days_select_pre(playerID, dayID, menuID)
@@ -176,18 +176,18 @@ public uj_fw_days_select_pre(playerID, dayID, menuID)
 	if (dayID != g_day) {
 		return UJ_DAY_AVAILABLE;
 	}
-	
+
 	// Only display if in the parent menu we recognize
 	if (menuID != g_menuSpecial) {
 		return UJ_DAY_DONT_SHOW;
 	}
-	
+
 	// If we *can* show the menu, but it's already enabled,
 	// then have it be unavailable
 	if (g_dayEnabled) {
 		return UJ_DAY_NOT_AVAILABLE;
 	}
-	
+
 	return UJ_DAY_AVAILABLE;
 }
 
@@ -196,7 +196,7 @@ public uj_fw_days_select_post(playerID, dayID)
 	// This is not our item
 	if (dayID != g_day)
 		return;
-	
+
 	start_day();
 }
 
@@ -205,7 +205,7 @@ public uj_fw_days_end(dayID)
 	// If dayID refers to our day and our day is enabled
 	if(dayID == g_day && g_dayEnabled) {
 		end_day();
-		
+
 	}
 }
 
@@ -213,35 +213,35 @@ start_day()
 {
 if (!g_dayEnabled) {
 	g_dayEnabled = true;
-	
+
 	// Find settings
 	//new primaryAmmoCount = get_pcvar_num(g_primaryAmmoPCVar);
-	
+
 	new players[32], playerID;
 	new playerCount = uj_core_get_players(players, true, CS_TEAM_T);
 	for (new i = 0; i < playerCount; ++i) {
 		playerID = players[i];
-		
+
 		// Give user items
 		uj_core_strip_weapons(playerID);
 	}
-	
+
 	//new health = get_pcvar_num(g_healthPCVar);
-	
+
 	playerCount = uj_core_get_players(players, true, CS_TEAM_CT);
 	for (new i = 0; i < playerCount; ++i) {
 		playerID = players[i];
-		
+
 		// Set user up with noclip
 		uj_core_strip_weapons(playerID);
 		//set_user_noclip(playerID, 1);
 		//set_user_health(playerID, health);
 	}
-	
+
 	static iPlayers[32], iNum, i, iPlayer;
 	get_players( iPlayers, iNum, "a" );
-	
-	for ( i=0; i<iNum; i++ ) 
+
+	for ( i=0; i<iNum; i++ )
 	{
 		iPlayer = iPlayers[i];
 		SaveWeapons(iPlayer);
@@ -249,10 +249,10 @@ if (!g_dayEnabled) {
 		//GiveItem2( iPlayer, CSW_USP, 200);
 		//GiveItem2( iPlayer, CSW_KNIFE);
 		give_item(iPlayer, "weapon_knife");
-	}	
-	
+	}
+
 	set_pcvar_num(verbose, 1);
-	set_pcvar_num(pbmoves, 1);	
+	set_pcvar_num(pbmoves, 1);
 	uj_core_block_weapon_pickup(0, true);
 	uj_chargers_block_heal(0, true);
 	uj_chargers_block_armor(0, true);
@@ -282,7 +282,7 @@ give_item(playerID, "weapon_knife");
 static iPlayers[32], iNum, i, iPlayer;
 get_players( iPlayers, iNum, "a" );
 
-for ( i=0; i<iNum; i++ ) 
+for ( i=0; i<iNum; i++ )
 {
 
 iPlayer = iPlayers[i];
@@ -303,7 +303,7 @@ public plugin_precache()
 {
 
 // Register day
-g_day = uj_days_register(DAY_NAME, DAY_OBJECTIVE, DAY_SOUND)	
+g_day = uj_days_register(DAY_NAME, DAY_OBJECTIVE, DAY_SOUND)
 register_cvar("amx_pbgun", "1");
 //register_cvar("amx_pbusp", "1");
 //register_cvar("amx_pbglock", "1");
@@ -348,11 +348,11 @@ public fw_cmdstart( id, uc_handle, random_seed )
 {
 	if ( !is_user_alive( id ) || !get_pcvar_num(pbmoves))
 	return FMRES_IGNORED
-	
+
 	static buttons; buttons = get_uc( uc_handle, UC_Buttons )
 
 	new Float: gametime = get_gametime()
-	
+
 	if ((gametime - userSprintLast[id] > get_pcvar_float(rechargetime) || !userSprintLast[id]))
 	{
 		userSprintTiredness[id] = 0
@@ -363,7 +363,7 @@ public fw_cmdstart( id, uc_handle, random_seed )
 			userSprintAdvised[id] = true
 			show_hudmessage(id, "Energy full. You can sprint with right-click...");
 		}
-		
+
 		if (get_pcvar_num(use_batmeter))
 		{
 			userSprintLastBat[id] = gametime
@@ -372,13 +372,13 @@ public fw_cmdstart( id, uc_handle, random_seed )
 			message_end();
 		}
 	}
-	
+
 	new currentweapon = get_user_weapon(id)
-	
+
 	if (buttons & IN_ATTACK2 && currentweapon != CSW_SCOUT)
 	{
 		set_uc (uc_handle, UC_Buttons, buttons & ~IN_ATTACK2);
-	
+
 		if (userSprintTiredness[id] >= get_pcvar_num(max_stamina))
 		{
 			userSprintAdvised[id] = false
@@ -391,16 +391,16 @@ public fw_cmdstart( id, uc_handle, random_seed )
 				emit_sound(id, CHAN_AUTO, "player/gasp1.wav", 1.0, ATTN_NORM , 0, PITCH_NORM);
 				userSprintSound[id] = gametime
 			}
-			
-				
-			return FMRES_IGNORED;		
+
+
+			return FMRES_IGNORED;
 		}
-	
-		userSprintTiredness[id] += 1				
-		
+
+		userSprintTiredness[id] += 1
+
 		if (!(buttons & IN_DUCK))
-		{	
-			
+		{
+
 			if (currentweapon != CSW_KNIFE){
 				get_weaponname(currentweapon,userWeapon[id],30)
 				engclient_cmd(id, "weapon_knife")
@@ -414,28 +414,28 @@ public fw_cmdstart( id, uc_handle, random_seed )
 				userSprintSpeed[id] = 400;
 
 			userSprintLast[id] = gametime
-			
+
 			//Some of this was inspired in +Speed 1.17 by Melanie
 			new Float:returnV[3], Float:Original[3]
 			VelocityByAim ( id, userSprintSpeed[id], returnV )
-	
+
 			pev(id,pev_velocity,Original)
-			
+
 			//Avoid floating in the air and ultra high jumps
 			if (vector_length(Original) < 600.0 || Original[2] < 0.0)
 				returnV[2] = Original[2]
-			
+
 			set_pev(id,pev_velocity,returnV)
 			set_hudmessage(255, 255, 255, -1.0, 0.33, 0, 0.1, 0.1);
 			if (get_pcvar_num(verbose))
 				show_hudmessage(id, "Sprinting...");
-			
+
 			if (userSprintLast[id] - userSprintSound[id] > 1.0)
 			{
 				emit_sound(id, CHAN_AUTO, "player/sprint.wav", 1.0, ATTN_NORM, 0, PITCH_NORM);
-				userSprintSound[id] = userSprintLast[id]				
+				userSprintSound[id] = userSprintLast[id]
 			}
-		
+
 			if (gametime - userSprintLastBat[id] > 0.2 && get_pcvar_num(use_batmeter))
 			{
 				userSprintLastBat[id] = gametime
@@ -446,31 +446,31 @@ public fw_cmdstart( id, uc_handle, random_seed )
 			}
 
 
-		
+
 			return FMRES_IGNORED;
 		} else
-		{			
+		{
 			if (userSprintSpeed[id] > 2)
 				userSprintSpeed[id] -= 2;
 			else
 				userSprintSpeed[id] = 0;
-				
+
 			userSprintLast[id] = gametime
 
 			new Float:returnV[3], Float:Original[3]
 			VelocityByAim ( id, userSprintSpeed[id], returnV )
-	
+
 			pev(id,pev_velocity,Original)
-			
+
 			//Avoid floating in the air and ultra high jumps
 			if (vector_length(Original) < 600.0 || Original[2] < 0.0)
 				returnV[2] = Original[2]
-			
+
 			set_pev(id,pev_velocity,returnV)
 			set_hudmessage(255, 255, 255, -1.0, 0.33, 0, 0.1, 0.1);
 			if (get_pcvar_num(verbose))
 				show_hudmessage(id, "Sliding...");
-			
+
 			return FMRES_IGNORED;
 		}
 
@@ -483,7 +483,7 @@ public fw_cmdstart( id, uc_handle, random_seed )
 		userWeapon[id][0] = 0
 	}
 	userSprintSpeed[id] = 0;
-	
+
 	return FMRES_IGNORED;
 }
 
@@ -516,9 +516,9 @@ if(g_dayEnabled)
 }
 }
 
-public fw_setmodel(ent, model[]) 
+public fw_setmodel(ent, model[])
 {
-if (equali(model, "models/w_mp5.mdl") && g_dayEnabled) 
+if (equali(model, "models/w_mp5.mdl") && g_dayEnabled)
 	if (get_pcvar_num(pbgun))
 	{
 		engfunc(EngFunc_SetModel, ent, "models/ultimate_jailbreak/w_pbgun.mdl");
@@ -587,7 +587,7 @@ public paint_fire(id)
 		while (a-- > 1 && !ent)
 		if (g_pbstatus[a] == 2)
 		ent = g_pbstatus[a] = g_paintballs[a];
-	
+
 	if (pev_valid(ent) && is_user_alive(id))
 	{
 		new Float:vangles[3], Float:nvelocity[3], Float:voriginf[3], vorigin[3], clr;
@@ -595,7 +595,7 @@ public paint_fire(id)
 		set_pev(ent, pev_owner, id);
 		engfunc(EngFunc_SetModel, ent, "models/ultimate_jailbreak/w_paintball.mdl");
 		engfunc(EngFunc_SetSize, ent, Float:{-1.0, -1.0, -1.0}, Float:{1.0, 1.0, 1.0});
-		
+
 		switch (get_pcvar_num(color))
 		{
 			case 2: clr = (get_user_team(id) == 1) ? 0 : 1;
@@ -604,31 +604,31 @@ public paint_fire(id)
 				default: clr = random_num(0, 6);
 		}
 		set_pev(ent, pev_skin, clr);
-		
+
 		get_user_origin(id, vorigin, 1);
 		IVecFVec(vorigin, voriginf);
 		engfunc(EngFunc_SetOrigin, ent, voriginf);
-		
+
 		vangles[0] = random_float(-180.0, 180.0);
 		vangles[1] = random_float(-180.0, 180.0);
 		set_pev(ent, pev_angles, vangles);
-		
+
 		pev(id, pev_v_angle, vangles);
 		set_pev(ent, pev_v_angle, vangles);
 		pev(id, pev_view_ofs, vangles);
 		set_pev(ent, pev_view_ofs, vangles);
-		
+
 		set_pev(ent, pev_solid, 2);
 		set_pev(ent, pev_movetype, 5);
-		
+
 		velocity_by_aim(id, get_pcvar_num(veloc), nvelocity);
 		set_pev(ent, pev_velocity, nvelocity);
 		set_pev(ent, pev_effects, pev(ent, pev_effects) & ~EF_NODRAW);
-		
+
 		set_task(0.1, "paint_glow", ent);
 		set_task(15.0 , "paint_reset", ent+TASK_PB_RESET);
 	}
-	
+
 	return ent;
 }
 
@@ -638,11 +638,11 @@ public fw_touch(bullet, ent)
 	pev(bullet, pev_classname, class, 19);
 	if (!equali(class, "pbBullet"))
 		return FMRES_IGNORED;
-	
+
 	new Float:origin[3], class2[20], owner = pev(bullet, pev_owner), is_ent_alive = is_user_alive(ent);
 	pev(ent, pev_classname, class2, 19);
 	pev(bullet, pev_origin, origin);
-	
+
 	if (is_ent_alive)
 	{
 		if (owner == ent || pev(ent, pev_takedamage) == DAMAGE_NO)
@@ -650,34 +650,34 @@ public fw_touch(bullet, ent)
 		if (get_user_team(owner) == get_user_team(ent))
 			if (!get_pcvar_num(friendlyfire))
 			return FMRES_IGNORED;
-		
+
 		ExecuteHam(Ham_TakeDamage, ent, owner, owner, float(get_pcvar_num(damge) + 99), 4098); //4098 8196
 		CheckTerrorist( );
 	}
-	
+
 	if (!equali(class, class2))
-	{	
+	{
 		set_pev(bullet, pev_velocity, Float:{0.0, 0.0, 0.0});
 		set_pev(bullet, pev_classname, "pbPaint");
 		set_pev(bullet, pev_solid, 0);
 		set_pev(bullet, pev_movetype, 0);
 		engfunc(EngFunc_SetModel, bullet, "sprites/paintball.spr");
-		
+
 		new a, findpb = 0;
 		while (a++ < g_pbcount && !findpb)
 			if (g_paintballs[a] == bullet)
 			findpb = g_pbstatus[a] = 2;
-		
+
 		remove_task(bullet);
 		remove_task(bullet+TASK_PB_RESET);
-		
+
 		if (get_pcvar_num(sound))
 		{
 			static wav[20];
 			formatex(wav, 20, is_ent_alive ? "player/pl_pain%d.wav" : "misc/pb%d.wav", is_ent_alive ? random_num(4,7) : random_num(1,4));
 			emit_sound(bullet, CHAN_AUTO, wav, 1.0, ATTN_NORM, 0, PITCH_NORM);
 		}
-		
+
 		new bool:valid_surface = (is_ent_alive || containi(class2, "door") != -1) ? false : true;
 		if (pev(ent, pev_health) && !is_ent_alive)
 		{
@@ -691,10 +691,10 @@ public fw_touch(bullet, ent)
 		}
 		else
 			paint_reset(bullet+TASK_PB_RESET);
-		
-		return FMRES_HANDLED; 
+
+		return FMRES_HANDLED;
 	}
-	
+
 	return FMRES_IGNORED;
 }
 
@@ -704,23 +704,23 @@ public paint_splat(ent)
 	pev(ent, pev_origin, origin);
 	pev(ent, pev_view_ofs, viewofs);
 	pev(ent, pev_v_angle, angles);
-	
+
 	norigin[0] = origin[0] + viewofs[0];
 	norigin[1] = origin[1] + viewofs[1];
 	norigin[2] = origin[2] + viewofs[2];
 	aiming[0] = norigin[0] + floatcos(angles[1], degrees) * 1000.0;
 	aiming[1] = norigin[1] + floatsin(angles[1], degrees) * 1000.0;
 	aiming[2] = norigin[2] + floatsin(-angles[0], degrees) * 1000.0;
-	
+
 	engfunc(EngFunc_TraceLine, norigin, aiming, 0, ent, 0);
 	get_tr2(0, TR_vecPlaneNormal, normal);
-	
+
 	vector_to_angle(normal, angles);
 	angles[1] += 180.0;
 	if (angles[1] >= 360.0) angles[1] -= 360.0;
 	set_pev(ent, pev_angles, angles);
 	set_pev(ent, pev_v_angle, angles);
-	
+
 	origin[0] += (normal[0] * random_float(0.3, 2.7));
 	origin[1] += (normal[1] * random_float(0.3, 2.7));
 	origin[2] += (normal[2] * random_float(0.3, 2.7));
@@ -768,7 +768,7 @@ public paint_reset(ent)
 	while (a++ <= g_pbcount && findpb)
 		if (g_paintballs[a] == ent)
 		findpb = g_pbstatus[a] = 0;
-	
+
 	set_pev(ent, pev_effects, pev(ent, pev_effects) | EF_NODRAW);
 	engfunc(EngFunc_SetSize, ent, Float:{0.0, 0.0, 0.0}, Float:{0.0, 0.0, 0.0});
 	set_pev(ent, pev_velocity, Float:{0.0, 0.0, 0.0});
@@ -784,22 +784,22 @@ public ev_roundstart()
 		paint_reset(g_paintballs[a]+TASK_PB_RESET);
 	if (freezetime)
 		freezetime = 0;
-	
+
 	g_dayEnabled = false;
 	set_pcvar_num(verbose, 0);
 	set_pcvar_num(pbmoves, 0);
-	
+
 	static iPlayers[32], iNum, i, iPlayer;
 	get_players( iPlayers, iNum, "a" );
-	
-	for ( i=0; i<iNum; i++ ) 
+
+	for ( i=0; i<iNum; i++ )
 	{
-		
+
 		iPlayer = iPlayers[i];
 		give_item(iPlayer, "weapon_knife");
-		
+
 	}
-	
+
 }
 
 public ev_freezetime()
@@ -837,10 +837,10 @@ public SaveWeapons(iPlayer)
 {
 	if( !get_bit(g_bIsConnected, iPlayer) && !get_bit(g_bIsAlive, iPlayer) )
 		return PLUGIN_HANDLED;
-	
+
 	new iWeaponBits = g_iWeaponBits[iPlayer] = entity_get_int(iPlayer, EV_INT_weapons) & VALID_WEAPONS;
 	//(pev(id,pev_effects) & 8)
-	
+
 	for(new i;i<=CSW_P90;i++)
 	{
 		if(IsWeaponInBits(i, iWeaponBits))
@@ -850,7 +850,7 @@ public SaveWeapons(iPlayer)
 		}
 	}
 	StripPlayerWeapons(iPlayer);
-	
+
 	return PLUGIN_HANDLED;
 }
 
@@ -895,7 +895,7 @@ new static bpAmmo_default[CSW_P90+1] = {
 };
 stock GiveItem2(const id, const szItem, iAmmo = -1, bpAmmo = -1) {
 	give_item(id, g_szWeaponNames[szItem]);
-	
+
 	if(iAmmo >= 0) {
 		new wepID = find_ent_by_owner(-1, g_szWeaponNames[szItem], id);
 		if(wepID)
@@ -903,19 +903,19 @@ stock GiveItem2(const id, const szItem, iAmmo = -1, bpAmmo = -1) {
 			cs_set_weapon_ammo(wepID, iAmmo);
 		}
 	}
-	
-	if(bpAmmo >= 0) 
+
+	if(bpAmmo >= 0)
 		cs_set_user_bpammo(id, szItem, bpAmmo);
 	else cs_set_user_bpammo(id, szItem, bpAmmo_default[szItem]);
-	
+
 }
 
 public client_putinserver(id) {
-	
+
 	if(bool:!is_user_hltv(id))
 		set_bit(g_bIsConnected, id);
 	clear_bit(g_bIsAlive, id);
-	
+
 }
 
 CheckTerrorist( )
@@ -927,40 +927,40 @@ if( fnGetTerrorists() == 1 )
 	set_pcvar_num(pbmoves, 0);
 	static iPlayers[32], iNum, i, iPlayer;
 	get_players( iPlayers, iNum, "a" );
-	
-	for ( i=0; i<iNum; i++ ) 
+
+	for ( i=0; i<iNum; i++ )
 	{
-		
+
 		iPlayer = iPlayers[i];
 		SaveWeapons(iPlayer);
 		give_item(iPlayer, "weapon_knife");
-		
+
 	}
-	
+
 	new players[ 32 ], num, player;
 	get_players( players, num, "ae", "CT" );
-	
+
 	for( new i = 0; i < num; i++ )
 	{
 		player = players[ i ];
-		
+
 		GiveItem2(player, CSW_M4A1);
 		GiveItem2(player, CSW_DEAGLE);
-	}	
-	//fnColorPrint(0, "Paintball day has ended to due to last request"); 
+	}
+	//fnColorPrint(0, "Paintball day has ended to due to last request");
 }
 }
 
 fnGetTerrorists() {
 // Get's the number of terrorists
 static iPlayers[32], iNum;
-get_players(iPlayers, iNum, "ae", "TERRORIST"); 
+get_players(iPlayers, iNum, "ae", "TERRORIST");
 return iNum;
 }
 
 stock StripPlayerWeapons(id)
 {
-//strip_user_weapons(id); 
+//strip_user_weapons(id);
 //give_item(id, "weapon_knife");
 //new const DONT_STRIP = ( 1 << 2 ) | ( 1 << CSW_KNIFE );
 cs_set_user_nvg( id, 1 );
@@ -975,103 +975,103 @@ ham_strip_user_weapon(id, i);
 }
 if(HasShield(id))
 {
-	strip_user_weapons(id); 
-		
+	strip_user_weapons(id);
+
 }
 give_item(id, "weapon_knife");
 //for(new i=CSW_P228; i<=CSW_P90; i++)
 //ham_strip_user_weapon(id, i);
 }
 
-stock ham_strip_user_weapon(id, iCswId, iSlot = 0, bool:bSwitchIfActive = true) 
-{ 
+stock ham_strip_user_weapon(id, iCswId, iSlot = 0, bool:bSwitchIfActive = true)
+{
 	new iWeapon;
-	if( !iSlot ) 
-	{ 
-		static const iWeaponsSlots[] = { 
-			-1, 
-			2, //CSW_P228 
-			-1, 
-			1, //CSW_SCOUT 
-			4, //CSW_HEGRENADE 
-			1, //CSW_XM1014 
-			5, //CSW_C4 
-			1, //CSW_MAC10 
-			1, //CSW_AUG 
-			4, //CSW_SMOKEGRENADE 
-			2, //CSW_ELITE 
-			2, //CSW_FIVESEVEN 
-			1, //CSW_UMP45 
-			1, //CSW_SG550 
-			1, //CSW_GALIL 
-			1, //CSW_FAMAS 
-			2, //CSW_USP 
-			2, //CSW_GLOCK18 
-			1, //CSW_AWP 
-			1, //CSW_MP5NAVY 
-			1, //CSW_M249 
-			1, //CSW_M3 
-			1, //CSW_M4A1 
-			1, //CSW_TMP 
-			1, //CSW_G3SG1 
-			4, //CSW_FLASHBANG 
-			2, //CSW_DEAGLE 
-			1, //CSW_SG552 
-			1, //CSW_AK47 
-			3, //CSW_KNIFE 
-			1 //CSW_P90 
+	if( !iSlot )
+	{
+		static const iWeaponsSlots[] = {
+			-1,
+			2, //CSW_P228
+			-1,
+			1, //CSW_SCOUT
+			4, //CSW_HEGRENADE
+			1, //CSW_XM1014
+			5, //CSW_C4
+			1, //CSW_MAC10
+			1, //CSW_AUG
+			4, //CSW_SMOKEGRENADE
+			2, //CSW_ELITE
+			2, //CSW_FIVESEVEN
+			1, //CSW_UMP45
+			1, //CSW_SG550
+			1, //CSW_GALIL
+			1, //CSW_FAMAS
+			2, //CSW_USP
+			2, //CSW_GLOCK18
+			1, //CSW_AWP
+			1, //CSW_MP5NAVY
+			1, //CSW_M249
+			1, //CSW_M3
+			1, //CSW_M4A1
+			1, //CSW_TMP
+			1, //CSW_G3SG1
+			4, //CSW_FLASHBANG
+			2, //CSW_DEAGLE
+			1, //CSW_SG552
+			1, //CSW_AK47
+			3, //CSW_KNIFE
+			1 //CSW_P90
 		};
 		iSlot = iWeaponsSlots[iCswId];
-	} 
-	
+	}
+
 	const m_rgpPlayerItems_Slot0 = 367;
-	
-	iWeapon = get_pdata_cbase(id, m_rgpPlayerItems_Slot0 + iSlot, XO_PLAYER); 
-	
-	const XTRA_OFS_WEAPON = 4; 
-	const m_pNext = 42; 
-	const m_iId = 43; 
-	
-	while( iWeapon > 0 ) 
-	{ 
-		if( get_pdata_int(iWeapon, m_iId, XTRA_OFS_WEAPON) == iCswId ) 
-		{ 
-			break; 
-		} 
-		iWeapon = get_pdata_cbase(iWeapon, m_pNext, XTRA_OFS_WEAPON); 
-	} 
-	
-	if( iWeapon > 0 ) 
-	{ 
-		if( bSwitchIfActive && get_pdata_cbase(id, m_pActiveItem, XO_PLAYER) == iWeapon ) 
-		{ 
-			ExecuteHamB(Ham_Weapon_RetireWeapon, iWeapon); 
-		} 
-		
-		if( ExecuteHamB(Ham_RemovePlayerItem, id, iWeapon) ) 
-		{ 
-			user_has_weapon(id, iCswId, 0); 
-			ExecuteHamB(Ham_Item_Kill, iWeapon); 
-			return 1; 
-		} 
-	} 
-	
+
+	iWeapon = get_pdata_cbase(id, m_rgpPlayerItems_Slot0 + iSlot, XO_PLAYER);
+
+	const XTRA_OFS_WEAPON = 4;
+	const m_pNext = 42;
+	const m_iId = 43;
+
+	while( iWeapon > 0 )
+	{
+		if( get_pdata_int(iWeapon, m_iId, XTRA_OFS_WEAPON) == iCswId )
+		{
+			break;
+		}
+		iWeapon = get_pdata_cbase(iWeapon, m_pNext, XTRA_OFS_WEAPON);
+	}
+
+	if( iWeapon > 0 )
+	{
+		if( bSwitchIfActive && get_pdata_cbase(id, m_pActiveItem, XO_PLAYER) == iWeapon )
+		{
+			ExecuteHamB(Ham_Weapon_RetireWeapon, iWeapon);
+		}
+
+		if( ExecuteHamB(Ham_RemovePlayerItem, id, iWeapon) )
+		{
+			user_has_weapon(id, iCswId, 0);
+			ExecuteHamB(Ham_Item_Kill, iWeapon);
+			return 1;
+		}
+	}
+
 	return 0;
 }
 
 public Player_AddPlayerItem(const id, const iEntity)  //anti gun glitch
 {
 	new iWeapID = cs_get_weapon_id( iEntity );
-	
+
 	if( !iWeapID )
 		return HAM_IGNORED;
-	
-	if(g_dayEnabled)	
+
+	if(g_dayEnabled)
 		if(iWeapID != CSW_KNIFE && iWeapID != CSW_MP5NAVY)
 	{
 		SetHamReturnInteger( 1 );
 		return HAM_SUPERCEDE;
 	}
-	
+
 	return HAM_IGNORED;
 }

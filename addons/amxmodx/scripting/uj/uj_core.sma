@@ -10,7 +10,7 @@
 #include <uj_core_const>
 
 new const PLUGIN_NAME[] = "UJ | Core";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const OFFSET_PRIMARYWEAPON = 116;

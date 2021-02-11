@@ -5,7 +5,7 @@
 #include <uj_effects>
 
 new const PLUGIN_NAME[] = "UJ | Freedays";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const GLOW_RED = 255;

@@ -14,7 +14,7 @@
 
 
 new const PLUGIN_NAME[] = "[UJ] Item - Multi-Jump";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Multi-Jump";
@@ -50,10 +50,10 @@ public plugin_init()
 
   // Find the menu that item should appear in
   g_shopMenu = uj_menus_get_menu_id("Shop Menu");
-  
+
   register_forward(FM_PlayerPreThink, "FW_PlayerPreThink"); //multi jump
-  register_forward(FM_PlayerPostThink, "FW_PlayerPostThink"); //multi jump  
-  
+  register_forward(FM_PlayerPostThink, "FW_PlayerPostThink"); //multi jump
+
 }
 
 /*
@@ -76,7 +76,7 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
   if (get_bit(g_hasItem, playerID)) {
     return UJ_ITEM_NOT_AVAILABLE;
   }
-  
+
   return UJ_ITEM_AVAILABLE;
 }
 
@@ -164,9 +164,9 @@ multijump_check(playerID)
 
 public FW_PlayerPreThink(playerID)
 {
-  
+
   if (!is_user_alive(playerID)) return;
-  
+
   // multijump
   multijump_check(playerID);
 }

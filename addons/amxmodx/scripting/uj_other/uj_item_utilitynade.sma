@@ -14,7 +14,7 @@
 #include <uj_colorchat>
 
 new const PLUGIN_NAME[] = "[UJ] Item - Utility Nade";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Utility Nade";
@@ -141,36 +141,36 @@ GRENADE_FLASHBANG,
 GRENADE_SMOKEGREN,
 }
 
-new const NADE_MODEL[][] = 
+new const NADE_MODEL[][] =
 {
-"w_hegrenade.mdl", 
-"w_flashbang.mdl", 
+"w_hegrenade.mdl",
+"w_flashbang.mdl",
 "w_smokegrenade.mdl"
 }
 
-new const NADE_WPID[NadeRace] = 
+new const NADE_WPID[NadeRace] =
 {
-CSW_HEGRENADE, 
-CSW_FLASHBANG, 
+CSW_HEGRENADE,
+CSW_FLASHBANG,
 CSW_SMOKEGRENADE
 }
 
 new const NADE_BIT[NadeRace] =
 {
-(1<<0), 
-(1<<1), 
+(1<<0),
+(1<<1),
 (1<<2)
 }
 
 enum NadeType
 {
-NADE_DUD = -1,  
-NADE_NORMAL, 
-NADE_PROXIMITY, 
-NADE_IMPACT, 
-NADE_TRIP, 
-NADE_MOTION, 
-NADE_SATCHEL, 
+NADE_DUD = -1,
+NADE_NORMAL,
+NADE_PROXIMITY,
+NADE_IMPACT,
+NADE_TRIP,
+NADE_MOTION,
+NADE_SATCHEL,
 NADE_HOMING
 }
 
@@ -179,69 +179,69 @@ new const NADE_DONT_COUNT 		= (1<<31)
 
 enum Fward
 {
-FWD_NONE_ACTIVE 	= 0, 
-FWD_CMDSTART  		= (1<<0), 
-FWD_THINK   		= (1<<1), 
-FWD_SETMODEL  	 	= (1<<2), 
+FWD_NONE_ACTIVE 	= 0,
+FWD_CMDSTART  		= (1<<0),
+FWD_THINK   		= (1<<1),
+FWD_SETMODEL  	 	= (1<<2),
 FWD_TOUCH    		= (1<<3),
-FWD_SEC_EXPLODE 	= (1<<4), 
-FWD_TAKEDAMAGE		= (1<<5), 
-FWD_THINK_POST 		= (1<<6), 
+FWD_SEC_EXPLODE 	= (1<<4),
+FWD_TAKEDAMAGE		= (1<<5),
+FWD_THINK_POST 		= (1<<6),
 FWD_MESSAGE 		= (1<<7),
 FWD_HPSYSTEM 		= (1<<8)
 }
 
 enum ZmFunc
 {
-ZM_NO_ZM_ACTIVE 	= 0, 
-ZM_ZM_ACTIVE  		= 1, 
+ZM_NO_ZM_ACTIVE 	= 0,
+ZM_ZM_ACTIVE  		= 1,
 ZM_CAN_THINK	   	= 2,
 ZM_DO_ALL			= 3
 }
 
 enum TripNadeMode
 {
-TRIP_NOT_ATTACHED = 0, 
-TRIP_ATTACHED, 
-TRIP_WAITING, 
-TRIP_SCANNING, 
-TRIP_SHOULD_DETONATE, 
+TRIP_NOT_ATTACHED = 0,
+TRIP_ATTACHED,
+TRIP_WAITING,
+TRIP_SCANNING,
+TRIP_SHOULD_DETONATE,
 TRIP_DETONATED
 }
 
 enum Option
 {
 // Primary Off/On cvar
-OPTION_ENABLE_NADE_MODES, 
+OPTION_ENABLE_NADE_MODES,
 
 // General settings
 OPTION_FRIENDLY_FIRE,
-OPTION_BOT_ALLOW, 
-OPTION_NADES_IN_EFFECT, 
+OPTION_BOT_ALLOW,
+OPTION_NADES_IN_EFFECT,
 OPTION_REMOVE_IF_DIES,
-OPTION_SUPPRESS_FITH, 
-OPTION_DISPLAY_MODE_ON_DRAW, 
-OPTION_PLAY_SOUNDS, 
-OPTION_RESET_MODE_ON_THROW, 
-OPTION_RESOURCE_USE, 
+OPTION_SUPPRESS_FITH,
+OPTION_DISPLAY_MODE_ON_DRAW,
+OPTION_PLAY_SOUNDS,
+OPTION_RESET_MODE_ON_THROW,
+OPTION_RESOURCE_USE,
 OPTION_MSG_SVC_BAD,
-OPTION_TEAM_PLAY, 
+OPTION_TEAM_PLAY,
 OPTION_AFFECT_OWNER,
 OPTION_UNITS_SYSTEM,
 OPTION_MONSTERMOD_SUPPORT,
 
 // Grenade modes control menu
 OPTION_NORMAL_ENABLED,
-OPTION_PROXIMITY_ENABLED, 
-OPTION_IMPACT_ENABLED, 
-OPTION_TRIP_ENABLED, 
-OPTION_MOTION_ENABLED, 
-OPTION_SATCHEL_ENABLED, 
-OPTION_HOMING_ENABLED, 
+OPTION_PROXIMITY_ENABLED,
+OPTION_IMPACT_ENABLED,
+OPTION_TRIP_ENABLED,
+OPTION_MOTION_ENABLED,
+OPTION_SATCHEL_ENABLED,
+OPTION_HOMING_ENABLED,
 
-OPTION_REACT_TRIP_G, 
-OPTION_REACT_TRIP_F, 
-OPTION_REACT_TRIP_S, 
+OPTION_REACT_TRIP_G,
+OPTION_REACT_TRIP_F,
+OPTION_REACT_TRIP_S,
 
 OPTION_PROXIMITY_LOS,
 OPTION_MOTION_LOS,
@@ -250,29 +250,29 @@ OPTION_SATCHEL_DELAY,
 // Limit settings
 OPTION_LIMIT_SYSTEM,
 
-OPTION_LIMIT_PROXIMITY, 
-OPTION_LIMIT_TRIP, 
-OPTION_LIMIT_MOTION, 
-OPTION_LIMIT_SATCHEL, 
+OPTION_LIMIT_PROXIMITY,
+OPTION_LIMIT_TRIP,
+OPTION_LIMIT_MOTION,
+OPTION_LIMIT_SATCHEL,
 
-OPTION_INFINITE_GRENADES, 
-OPTION_INFINITE_FLASHES, 
-OPTION_INFINITE_SMOKES, 
+OPTION_INFINITE_GRENADES,
+OPTION_INFINITE_FLASHES,
+OPTION_INFINITE_SMOKES,
 
 // Hitpoints system settings
 OPTION_MATERIAL_SYSTEM,
 
-OPTION_SEC_EXPLO_AFFECT, 
+OPTION_SEC_EXPLO_AFFECT,
 
 OPTION_HITPOINT_NORMAL,
-OPTION_HITPOINT_PROXIMITY, 
+OPTION_HITPOINT_PROXIMITY,
 OPTION_HITPOINT_IMPACT,
-OPTION_HITPOINT_TRIP, 
-OPTION_HITPOINT_MOTION, 
-OPTION_HITPOINT_SATCHEL, 
+OPTION_HITPOINT_TRIP,
+OPTION_HITPOINT_MOTION,
+OPTION_HITPOINT_SATCHEL,
 OPTION_HITPOINT_HOMING,
 
-OPTION_HITPOINT_DEATH, 
+OPTION_HITPOINT_DEATH,
 OPTION_HITPOINT_FF,
 OPTION_HITPOINT_INTER_DMG,
 
@@ -285,23 +285,23 @@ OPTION_DMG_TEAMMATES,
 
 OPTION_DMG_NORMAL,
 OPTION_DMG_PROXIMITY,
-OPTION_DMG_IMPACT, 
-OPTION_DMG_TRIP, 
-OPTION_DMG_MOTION, 
-OPTION_DMG_SATCHEL, 
-OPTION_DMG_HOMING, 
+OPTION_DMG_IMPACT,
+OPTION_DMG_TRIP,
+OPTION_DMG_MOTION,
+OPTION_DMG_SATCHEL,
+OPTION_DMG_HOMING,
 
 // Internal functional settings
 OPTION_EXPLOSION_DELAY_TIME,
 OPTION_RADIUS_SEC_EXPLOSION,
 
-OPTION_ARM_TIME_TRIP, 
-OPTION_ARM_TIME_MOTION, 
-OPTION_ARM_TIME_SATCHEL, 
-OPTION_ARM_TIME_PROXIMITY, 
+OPTION_ARM_TIME_TRIP,
+OPTION_ARM_TIME_MOTION,
+OPTION_ARM_TIME_SATCHEL,
+OPTION_ARM_TIME_PROXIMITY,
 
-OPTION_TRIP_DETECT_DISTANCE, 
-OPTION_TRIP_FLY_SPEED, 
+OPTION_TRIP_DETECT_DISTANCE,
+OPTION_TRIP_FLY_SPEED,
 
 OPTION_RADIUS_PROXIMITY,
 OPTION_RADIUS_MOTION,
@@ -314,8 +314,8 @@ OPTION_HOMING_SPEED_ADD
 
 enum OptionType
 {
-TOPTION_TOGGLE = 1, 
-TOPTION_CELL, 
+TOPTION_TOGGLE = 1,
+TOPTION_CELL,
 TOPTION_FLOAT,
 }
 
@@ -401,9 +401,9 @@ new g_hasItem;
 
 public plugin_init()
 {
-	
+
 g_costCVar = register_cvar("uj_item_utilitynade_cost", ITEM_COST);
-g_rebelCVar = register_cvar("uj_item_utilitynade_rebel", ITEM_REBEL);	
+g_rebelCVar = register_cvar("uj_item_utilitynade_rebel", ITEM_REBEL);
 register_plugin(PLUGIN_NAME, PLUGIN_VERS, PLUGIN_AUTH);
 register_clcmd("amx_nade_mode_menu", "conjure_menu", ADMIN_ACCESS, "Shows settings menu for grenade modes.")
 register_clcmd("amx_nmm", "conjure_menu", ADMIN_ACCESS, "Shows settings menu for grenade modes.")
@@ -581,7 +581,7 @@ cacheCvars()
 
 register_event("CurWeapon", "event_armnade", "b", "1=1", "2=4", "2=9", "2=25")
 register_event("CurWeapon", "event_curweapon", "b", "1=1")
-register_event("HLTV", "event_new_round", "a", "1=0", "2=0") 
+register_event("HLTV", "event_new_round", "a", "1=0", "2=0")
 
 register_dictionary("nademodes.txt")
 
@@ -765,7 +765,7 @@ if (is_user_bot(playerID))
 {
 cl_is_bot |= (1<<playerID)
 
-if (g_botquota != 0) 
+if (g_botquota != 0)
 {
 // Delay for private data to initialize
 if (get_pcvar_num(g_botquota))
@@ -1077,7 +1077,7 @@ add_option_quatrotoggle(menu, OPTION_RESOURCE_USE, "Plugin effects", "\rOff", "\
 add_option_toggle(menu, OPTION_PLAY_SOUNDS, "Grenade sounds", "On", "Off")
 add_option_toggle(menu, OPTION_MONSTERMOD_SUPPORT, "Monstermod support", "On", "Off")
 add_option_toggle(menu, OPTION_MSG_SVC_BAD, "SVC_BAD fix", "On^n   \yNote: \wTurn on when the server has this problem!^n", "Off^n   \yNote: \wTurn on when the server has this problem!^n")
-add_option_toggle(menu, OPTION_BOT_ALLOW, "Allow bots to use the moded nades", "Yes^n", "No^n") 
+add_option_toggle(menu, OPTION_BOT_ALLOW, "Allow bots to use the moded nades", "Yes^n", "No^n")
 
 add_option_toggle(menu, OPTION_DISPLAY_MODE_ON_DRAW, "Display mode on draw", "Yes", "No")
 add_option_toggle(menu, OPTION_RESET_MODE_ON_THROW, "Reset mode on throw", "Yes^n", "No^n")
@@ -1377,7 +1377,7 @@ newpos = i
 }
 
 if (newpos > last)
-{					
+{
 for (new j=last;j<newpos;j++)
 {
 format(values[k], CVAR_MAX_STRING_LENGTH - 1, "%s%s", values[k], value_string[j])
@@ -1437,7 +1437,7 @@ newpos = i
 }
 
 if (newpos > last)
-{					
+{
 for (new j=last;j<newpos;j++)
 {
 format(values_float[k], CVAR_MAX_STRING_LENGTH - 1, "%s%s", values_float[k], value_string_float[j])
@@ -1513,11 +1513,11 @@ resetCounter(id)
 
 public task_botHamHooks(id)
 {
-if (g_botquota == 0 || !is_user_connected(id)) 
+if (g_botquota == 0 || !is_user_connected(id))
 return
 
 // Check again for safety
-if (is_user_bot(id) && get_pcvar_num(g_botquota) > 0) 
+if (is_user_bot(id) && get_pcvar_num(g_botquota) > 0)
 {
 // Post spawn fix for cz bots, since RegisterHam does not work for them
 RegisterHamFromEntity(Ham_Killed, 			id, "fw_killed_post", 1)
@@ -1603,7 +1603,7 @@ g_check_hpsystem = get_option(OPTION_MATERIAL_SYSTEM)
 
 if (is_nademodes_enabled())
 {
-bs_forward_collection |= FWD_CMDSTART | FWD_SETMODEL | FWD_THINK | FWD_TOUCH 
+bs_forward_collection |= FWD_CMDSTART | FWD_SETMODEL | FWD_THINK | FWD_TOUCH
 
 if (get_option(OPTION_DAMAGE_SYSTEM))
 {
@@ -2713,7 +2713,7 @@ if (get_option(OPTION_SATCHEL_DELAY))
 {
 if (cl_nextusetime[owner] > get_gametime())
 {
-return HAM_IGNORED 
+return HAM_IGNORED
 }
 else
 {
@@ -2955,7 +2955,7 @@ if (!allow_grenade_explode(ent))
 return HAM_IGNORED
 
 if (entity_get_float(ent, EV_FL_fuser4) <= gametime)
-{						
+{
 entity_set_float(ent, EV_FL_fuser4, gametime + 2.0)
 
 if (entity_get_int(ent, EV_INT_flags) & FL_ONGROUND)
@@ -2988,7 +2988,7 @@ else
 {
 switch (cl_team[owner])
 {
-case CS_TEAM_T: 
+case CS_TEAM_T:
 {
 if (get_option(OPTION_RESOURCE_USE) == 1)
 {
@@ -3171,7 +3171,7 @@ anglefraction = 1.0 - calc_cone_angle_from_distance(xs_vec_len(first))
 
 if (xs_vec_len(first) <= SMART_DISTANCE_LINE_PVS)
 {
-get_trip_grenade_middle_origin(ent, first) 
+get_trip_grenade_middle_origin(ent, first)
 
 if (!get_option(OPTION_TEAM_PLAY) || ((g_zombie_mod & ZM_ZM_ACTIVE) && !(g_zombie_mod & ZM_CAN_THINK)))
 {
@@ -3340,7 +3340,7 @@ return HAM_IGNORED
 }
 
 public fw_spawn_post(id)
-{	
+{
 if (is_user_alive(id))
 {
 cl_is_alive |= (1<<id)
@@ -3629,7 +3629,7 @@ return HAM_SUPERCEDE
 entity_set_int(grenade, EV_INT_flags, entity_get_int(grenade, EV_INT_flags) | FL_KILLME)
 
 if (!(_:UNCOUNTABLE_NADE_MODES & (1 << (_:type + 1))))
-{	
+{
 cl_counter[owner][NadeRace:get_grenade_race(grenade)][type] -= 1
 refresh_can_use_nade(owner, GRENADE_EXPLOSIVE)
 refresh_can_use_nade(owner, GRENADE_FLASHBANG)
@@ -4112,7 +4112,7 @@ continue
 // Set the remove property if they aren't normal nades
 if(is_grenade(ent) && get_grenade_type(ent) != NADE_NORMAL)
 entity_set_int(ent, EV_INT_flags , entity_get_int(ent, EV_INT_flags) | FL_KILLME)
-}	
+}
 
 return
 }
@@ -4399,7 +4399,7 @@ return ((dist == 1.0) ? true : false)
 }
 
 
-// This function is limited, it returns the same values unter CONE_CALC_DISTANCE_MAX 
+// This function is limited, it returns the same values unter CONE_CALC_DISTANCE_MAX
 stock Float:calc_cone_angle_from_distance(Float:distance)
 {
 // The angle is calculated from a formula that looks like this
@@ -4466,7 +4466,7 @@ write_byte(G)
 write_byte(B)
 write_byte(127)
 write_byte(1)
-message_end()	
+message_end()
 }
 
 stock draw_line(Float:start[3], Float:end[3], staytime, R = NOTEAM_RGB_R_COLOR, G = NOTEAM_RGB_G_COLOR, B = NOTEAM_RGB_B_COLOR)
@@ -4490,7 +4490,7 @@ write_byte(G)
 write_byte(B)
 write_byte(127)
 write_byte(1)
-message_end()	
+message_end()
 }
 
 draw_line_from_entity_broadcast(entid, Float:end[3], staytime, R = NOTEAM_RGB_R_COLOR, G = NOTEAM_RGB_G_COLOR, B = NOTEAM_RGB_B_COLOR)
@@ -4512,7 +4512,7 @@ write_byte(G)
 write_byte(B)
 write_byte(127)
 write_byte(1)
-message_end()	
+message_end()
 }
 
 clear_line(entid)

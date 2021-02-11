@@ -29,7 +29,7 @@ const HAS_SHIELD = 1<<24;
 #define cs_set_user_team_index(%0,%1) set_pdata_int(%0, m_iTeam, %1, XO_PLAYER)
 
 new const PLUGIN_NAME[] = "[UJ] Request - Global War";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const REQUEST_NAME[] = "Global War";
@@ -112,7 +112,7 @@ public uj_fw_requests_select_post(playerID, targetID, requestID)
 // This is not our request
 if (requestID != g_request)
 	return;
-	
+
 start_request(playerID, targetID);
 }
 
@@ -122,31 +122,31 @@ if(!g_requestEnabled) {
 	g_requestEnabled = true;
 	gCount = 5;
 	set_task( 1.0, "giveGlobalWarWeapons", TASK_GLOBAL_WAR, _, _, "a", gCount + 1 );
-	
+
 	//new ammoCount = get_pcvar_num(g_ammoPCVar);
-	
+
 	// Strip users of weapons, and give out scourts and knives
 	uj_core_strip_weapons(playerID);
 	uj_core_strip_weapons(targetID);
 	// cs_set_user_bpammo(playerID, CSW_SCOUT, ammoCount);
 	// cs_set_user_bpammo(targetID, CSW_SCOUT, ammoCount);
-	
+
 	// Do not allow participants to pick up any guns
 	uj_core_block_weapon_pickup(playerID, true);
 	uj_core_block_weapon_pickup(targetID, true);
-	
+
 	// Set health
 	set_pev(playerID, pev_health, 100.0);
 	set_pev(targetID, pev_health, 100.0);
-	
+
 	// Give armor
 	cs_set_user_armor(playerID, 100, CS_ARMOR_VESTHELM)
 	cs_set_user_armor(targetID, 100, CS_ARMOR_VESTHELM)
-	
+
 	// Find gravity setting
-	
+
 	// Set low gravity
-	
+
 	g_playerID = playerID;
 	g_targetID = targetID;
 }
@@ -157,17 +157,17 @@ public uj_fw_requests_end(requestID)
 // If requestID refers to our request and our request is enabled
 if(requestID == g_request && g_requestEnabled) {
 	g_requestEnabled = false;
-	
+
 	uj_core_strip_weapons(g_playerID);
 	uj_core_strip_weapons(g_targetID);
-	
+
 	set_user_gravity(g_playerID, 1.0);
 	set_user_gravity(g_targetID, 1.0);
-	
+
 	uj_core_block_weapon_pickup(g_playerID, false);
 	uj_core_block_weapon_pickup(g_targetID, false);
-	
-	
+
+
 	if( task_exists( TASK_GLOBAL_WAR ) )
 		remove_task( TASK_GLOBAL_WAR );
 	}
@@ -183,15 +183,15 @@ public giveGlobalWarWeapons()
 	{
 		set_hudmessage( 255, 255, 255, -1.0, 0.35, 0, 0.1, 1.0, 0.1, 0.1, 4 );
 		show_hudmessage( 0, "You will be equipped in %i seconds.", gCount );
-		
+
 		gCount--;
-		
+
 		return PLUGIN_HANDLED;
 	}
-	
+
 	new players[ 32 ], num, id;
 	get_players( players, num );
-	
+
 	for( new i = 0; i < num; i++ )
 	{
 		id = players[i];
@@ -199,21 +199,21 @@ public giveGlobalWarWeapons()
 		{
 			give_item(id, "weapon_m4a1");
 			cs_set_user_bpammo(id, CSW_M4A1, 30);
-			
+
 			give_item(id, "weapon_deagle");
 			cs_set_user_bpammo(id, CSW_DEAGLE, 7);
-			
+
 			cs_set_user_bpammo( id, CSW_M4A1, 500 );
 			cs_set_user_bpammo( id, CSW_DEAGLE, 200 );
-			
+
 			set_user_health( id, 100 );
 			cs_set_user_armor( id, 100, CS_ARMOR_VESTHELM );
 		}
 	}
-	
+
 	if( task_exists( TASK_GLOBAL_WAR ) )
 		remove_task( TASK_GLOBAL_WAR );
-	
+
 	return PLUGIN_HANDLED;
 }
 /* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE

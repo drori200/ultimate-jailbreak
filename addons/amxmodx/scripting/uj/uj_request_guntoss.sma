@@ -11,7 +11,7 @@
 #include <uj_requests>
 
 new const PLUGIN_NAME[] = "UJ | Request - Gun Toss";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const REQUEST_NAME[] = "Gun Toss";

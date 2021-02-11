@@ -18,7 +18,7 @@
 #define PLAYER_JUMP		6
 
 new const PLUGIN_NAME[] = "[UJ] Item - Bunny Hop";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Bunny Hop";
@@ -49,31 +49,31 @@ new g_hasItem;
 public plugin_init()
 {
 	register_plugin(PLUGIN_NAME, PLUGIN_VERS, PLUGIN_AUTH);
-		
+
 	// Register CVars
 	g_costCVar = register_cvar("uj_item_bhop_cost", ITEM_COST);
 	g_rebelCVar = register_cvar("uj_item_bhop_rebel", ITEM_REBEL);
-	
+
 	  // Register this item
 	g_item = uj_items_register(ITEM_NAME, ITEM_MESSAGE, g_costCVar, g_rebelCVar);
-		
+
 	// Find the menu that item should appear in
 	g_shopMenu = uj_menus_get_menu_id("Shop Menu");
 	g_pcvarBhopStyle = register_cvar("bhop_style", "0")  // (1 : no slowdown, 2 : no speed limit)
 	g_pcvarAutoBhop = register_cvar("bhop_auto", "0")
 	g_pcvarFallDamage = register_cvar("mp_falldamage", "1.0")
-	
+
 	RegisterHam(Ham_Player_Jump, "player", "Player_Jump")
 	register_forward(FM_UpdateClientData, "UpdateClientData")
 	register_forward(FM_CmdStart, "CmdStart")
 	RegisterHam(Ham_Spawn, "player", "Check_Alive", 1)
 	RegisterHam(Ham_Killed, "player", "Check_Alive", 1)
 	RegisterHam(Ham_TakeDamage, "player", "Ham_TakeDamage_player")
-	
+
 	register_concmd("amx_autobhop", "AdminCmd_Bhop", ADMIN_LEVEL_A, "<nick|#userid> <0|1>")
-	
-	g_pcvarGravity = get_cvar_pointer("sv_gravity")  
-  
+
+	g_pcvarGravity = get_cvar_pointer("sv_gravity")
+
 }
 
 /*
@@ -96,7 +96,7 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
   if (get_bit(g_hasItem, playerID)) {
     return UJ_ITEM_NOT_AVAILABLE;
   }
-  
+
   return UJ_ITEM_AVAILABLE;
 }
 
@@ -200,7 +200,7 @@ public Player_Jump(playerID)
 	{
 		return
 	}
-	
+
 	static iBhopStyle ; iBhopStyle = get_pcvar_num(g_pcvarBhopStyle)
 	if(!iBhopStyle)
 	{

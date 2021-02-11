@@ -20,7 +20,7 @@
 #define REGEN_DISTANCE 200.0
 
 new const PLUGIN_NAME[] = "[UJ] Item - Health Regeneration";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Health Regeneration";
@@ -57,9 +57,9 @@ public plugin_init()
 
   // Find the menu that item should appear in
   g_shopMenu = uj_menus_get_menu_id("Shop Menu");
-  
+
   g_iMaxPlayers   = get_maxplayers();
-  
+
 }
 
 /*
@@ -82,7 +82,7 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
   if (get_bit(g_hasItem, playerID)) {
     return UJ_ITEM_NOT_AVAILABLE;
   }
-  
+
   return UJ_ITEM_AVAILABLE;
 }
 
@@ -156,22 +156,22 @@ public Task_HPRegenLoop(playerID)
 	new Float: NewHP;
 	//new iHealth = 100 + aData[ GangHP ] * get_pcvar_num( g_pHealthPerLevel );
 	new iHealth = 100;
-	
-	if(entity_get_float(playerID, EV_FL_health) < iHealth) 
+
+	if(entity_get_float(playerID, EV_FL_health) < iHealth)
 	{
 		NewHP = entity_get_float(playerID, EV_FL_health) + REGEN_AMOUNT;
-	
+
 		if(NewHP >= REGEN_MAXHP) // If user regened to much HP. We set the MAXHP
 			NewHP = REGEN_MAXHP;
 		entity_set_float(playerID, EV_FL_health,NewHP);
 	}
-	
+
 	new Team = get_user_team(playerID);
 
 	for(new i=1;i<=g_iMaxPlayers;i++) if(get_user_team(i) == Team && is_user_alive(i) && i != playerID && entity_range(playerID,i) <= REGEN_DISTANCE)
 	{
 		NewHP = entity_get_float(i, EV_FL_health) + REGEN_AMOUNTOTHERS;
-		
+
 		if(NewHP >= StartHP) // If user regened to much HP. We set the MAXHP
 			NewHP = StartHP;
 

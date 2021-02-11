@@ -6,7 +6,7 @@
 #include <uj_days>
 
 new const PLUGIN_NAME[] = "UJ | Day - Lava Day";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const DAY_NAME[] = "Lava Day";

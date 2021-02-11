@@ -5,7 +5,7 @@
 #include <uj_points>
 
 new const PLUGIN_NAME[] = "UJ | Points - Admin";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 #define FLAG_ADMIN ADMIN_LEVEL_C

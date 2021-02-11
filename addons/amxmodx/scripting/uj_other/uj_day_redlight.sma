@@ -1,5 +1,5 @@
 #include <amxmodx> 
-#include <amxmisc> 
+#include <amxmisc>
 #include <cstrike>
 #include <dhudmessage>
 #include <uj_colorchat>
@@ -10,7 +10,7 @@
 #include <uj_menus>
 
 new const PLUGIN_NAME[] = "[UJ] Day - Red Light Green Light";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const DAY_NAME[] = "Red Light Green Light";
@@ -131,10 +131,10 @@ return PLUGIN_CONTINUE
 }
 
 static iPlayers[32], iNum, i, iPlayer;
-get_players( iPlayers, iNum, "ae", "TERRORIST"  ); 
+get_players( iPlayers, iNum, "ae", "TERRORIST"  );
 for( i=0; i<iNum; i++ )
 {
-iPlayer = iPlayers[i];      
+iPlayer = iPlayers[i];
 
 switch (item) {
 case 0: {
@@ -197,7 +197,7 @@ return PLUGIN_HANDLED;
 display_reaction_type_menu(playerID)
 {
 menu_display(playerID, g_menuTypes, 0);
-}		
+}
 
 display_reaction_action_menu(playerID)
 {

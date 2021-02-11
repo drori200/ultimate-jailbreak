@@ -10,7 +10,7 @@
 #include <uj_colorchat>
 
 new const PLUGIN_NAME[] = "[UJ] Item - Portable Cameras";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Portable Cameras";
@@ -41,17 +41,17 @@ new g_hasItem;
 public plugin_init()
 {
 	register_plugin(PLUGIN_NAME, PLUGIN_VERS, PLUGIN_AUTH);
-	
+
 	// Register CVars
 	g_costCVar = register_cvar("uj_item_camera_cost", ITEM_COST);
 	g_rebelCVar = register_cvar("uj_item_camera_rebel", ITEM_REBEL);
-	
+
 	// Register this item
 	g_item = uj_items_register(ITEM_NAME, ITEM_MESSAGE, g_costCVar, g_rebelCVar);
-	
+
 	// Find the menu that item should appear in
 	g_shopMenu = uj_menus_get_menu_id("Shop Menu");
-	
+
 	register_forward(FM_PlayerPreThink, "fw_PlayerPreThink")
 	//register_clcmd("drop","addcm")
 	register_clcmd("amx_viewcamera","viewcm")
@@ -73,17 +73,17 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
 	if (itemID != g_item) {
 		return UJ_ITEM_AVAILABLE;
 	}
-	
+
 	// Only display if it appears in the menu we retrieved in plugin_init()
 	if (menuID != g_shopMenu) {
 		return UJ_ITEM_DONT_SHOW;
 	}
-	
+
 	// If the specified user is already invisible, hide item from menus
 	if (get_bit(g_hasItem, playerID)) {
 		return UJ_ITEM_NOT_AVAILABLE;
 	}
-	
+
 	return UJ_ITEM_AVAILABLE;
 }
 
@@ -95,7 +95,7 @@ public uj_fw_items_select_post(playerID, itemID, menuID)
 	// This is not our item - do not continue
 	if (g_item != itemID)
 		return;
-	
+
 	give_shopitem(playerID);
 }
 
@@ -110,7 +110,7 @@ public uj_fw_items_strip_item(playerID, itemID)
 	(itemID != UJ_ITEM_ALL_ITEMS)) {
 		return;
 	}
-	
+
 	remove_item(playerID);
 }
 
@@ -118,14 +118,14 @@ give_shopitem(playerID)
 {
 if (!get_bit(g_hasItem, playerID)) {
 	// Find transparency level
-	
+
 	// Glow user and set bit
 	set_bit(g_hasItem, playerID);
 	cmmenu( playerID )
 	uj_colorchat_print(playerID, playerID, "Press ^4[E]-'Use'^1 to open the ^3camera menu^1")
 	set_hudmessage(255, 0, 0, -1.0, -1.0, 0, 6.0, 4.0)
-	show_hudmessage(playerID, "Press your [USE] key to open the camera menu")	
-	
+	show_hudmessage(playerID, "Press your [USE] key to open the camera menu")
+
 }
 return PLUGIN_HANDLED;
 }
@@ -162,7 +162,7 @@ public nRound()
 		if(get_pcvar_num(delround))
 			delete_camera(i)
 	}
-	
+
 	return PLUGIN_HANDLED
 }
 
@@ -188,10 +188,10 @@ public cmmenu(playerID)
 	{
 		return PLUGIN_HANDLED
 	}
-	
+
 	else
 	{
-		
+
 	new menu[192]
 	new keys = MENU_KEY_0|MENU_KEY_1|MENU_KEY_2|MENU_KEY_3
 	format(menu, 191, "[AG] Camera Menu^n^n1. Create Camera^n2. View Camera^n3. Delete Camera^n^n0. Exit")
@@ -314,7 +314,7 @@ stock create_camera(playerID)
 		uj_colorchat_print(playerID, playerID, "You can't create a camera while you are dead.")
 		return 0;
 	}
-	
+
 	if(delete_camera(playerID))
 		//client_print(id,print_chat,"[AG] Your old camera was deleted and new camera spawned.")
 		uj_colorchat_print(playerID, playerID, "Your old camera was deleted and new camera spawned.")
@@ -367,7 +367,7 @@ stock view_camera(playerID)
 		uj_colorchat_print(playerID, playerID, "You can't view your camera while you're dead.")
 		return 0;
 	}
-	
+
 	if(is_valid_ent(camera[playerID]))
 	{
 		attach_view(playerID,camera[playerID])
@@ -411,8 +411,8 @@ stock create_explosion(origin0,origin1,origin2,size,flags)
 	origina[0]=origin0
 	origina[1]=origin1
 	origina[2]=origin2
-	message_begin(MSG_BROADCAST,SVC_TEMPENTITY,origina) 
-	write_byte( 3 ) 
+	message_begin(MSG_BROADCAST,SVC_TEMPENTITY,origina)
+	write_byte( 3 )
 	write_coord(origina[0])	// start position
 	write_coord(origina[1])
 	write_coord(origina[2])
@@ -427,24 +427,24 @@ public fw_PlayerPreThink(playerID)
 {
 	if (!is_user_alive(playerID))
 	return FMRES_IGNORED
-	
+
 	new button = get_user_button(playerID)
 	new oldbutton = get_user_oldbutton(playerID)
 	//static buttons, oldbuttons;
 	//buttons = get_uc(uc_handle, UC_Buttons);
-	
+
 	if (get_bit(g_hasItem, playerID))
 	{
 		//if(g_bind_use[id])
 		//{
 			if (!(oldbutton & IN_USE) && (button & IN_USE))
 				cmmenu( playerID )
-			
+
 			//if (!(oldbutton & IN_RELOAD) && (button & IN_RELOAD))
 				//cmmenu(id)
 		//}
 	}
-	
+
 	return PLUGIN_CONTINUE
 }
 /* AMXX-Studio Notes - DO NOT MODIFY BELOW HERE

@@ -1,7 +1,7 @@
 #include <amxmodx> 
-#include <fun> 
-#include <amxmisc> 
-#include <engine> 
+#include <fun>
+#include <amxmisc>
+#include <engine>
 #include <fakemeta_util>
 #include <hamsandwich>
 #include <cstrike>
@@ -13,7 +13,7 @@
 #include <uj_colorchat>
 
 new const PLUGIN_NAME[] = "[UJ] Item - Air Strike";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "Air Strike";
@@ -53,13 +53,13 @@ public plugin_init()
 
   // Find the menu that item should appear in
   g_shopMenu = uj_menus_get_menu_id("Shop Menu");
-  register_clcmd("drop", "call_strike") 
+  register_clcmd("drop", "call_strike")
   register_concmd("give_airstrike", "give_strike", ADMIN_BAN, "<name/@all> gives an airstrike to the spcified target")
- 
+
   strike_mode = register_cvar("airstrike_mode", "1")
   strike_dam = register_cvar("airstrike_damage", "5000.0")
-  strike_radius = register_cvar("airstrike_radius", "500.0") 
-  
+  strike_radius = register_cvar("airstrike_radius", "500.0")
+
 }
 
 /*
@@ -82,7 +82,7 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
   if (get_bit(g_hasItem, playerID)) {
     return UJ_ITEM_NOT_AVAILABLE;
   }
-  
+
   return UJ_ITEM_AVAILABLE;
 }
 
@@ -151,11 +151,11 @@ public plugin_precache()
 {
 
 
- precache_sound("ambience/siren.wav") 
+ precache_sound("ambience/siren.wav")
  precache_sound("ambience/jetflyby1.wav")
  precache_sound("weapons/airstrike_explosion.wav")
- precache_model("models/rpgrocket.mdl") 
- ExploSpr = precache_model("sprites/fexplo.spr") 
+ precache_model("models/rpgrocket.mdl")
+ ExploSpr = precache_model("sprites/fexplo.spr")
  cache_spr_line = precache_model("sprites/laserbeam.spr")
 
 
@@ -163,28 +163,28 @@ public plugin_precache()
 
 public give_strike(playerID,level,cid)
 {
-	if (!cmd_access(playerID,level,cid,1)) 
+	if (!cmd_access(playerID,level,cid,1))
 	{
 		console_print(playerID,"You have no access to that command");
 		return;
 	}
-	if (read_argc() > 2) 
+	if (read_argc() > 2)
 	{
 		console_print(playerID,"Too many arguments supplied.");
 		return;
 	}
-	
+
 	new arg1[32];
 	read_argv(1, arg1, sizeof(arg1) - 1);
 	new player = cmd_target(playerID, arg1, 10);
-	
-	if ( !player ) 
+
+	if ( !player )
 	{
-		if ( arg1[0] == '@' ) 
+		if ( arg1[0] == '@' )
 		{
-			for ( new i = 1; i <= 32; i++ ) 
+			for ( new i = 1; i <= 32; i++ )
 			{
-				if ( is_user_connected(i) && !get_bit(g_hasItem, playerID)) 
+				if ( is_user_connected(i) && !get_bit(g_hasItem, playerID))
 				{
 					give_shopitem(playerID)
 					emit_sound(playerID, CHAN_WEAPON, "items/gunpickup2.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
@@ -192,14 +192,14 @@ public give_strike(playerID,level,cid)
 
 				}
 			}
-		} 
-		else 
+		}
+		else
 		{
 			client_print(playerID, print_center, "[ZP] No Such Player/Team");
 			return;
 		}
-	} 
-	else if ( !get_bit(g_hasItem, playerID)) 
+	}
+	else if ( !get_bit(g_hasItem, playerID))
 	{
 		give_shopitem(playerID);
 		emit_sound(playerID, CHAN_WEAPON, "items/gunpickup2.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
@@ -208,32 +208,32 @@ public give_strike(playerID,level,cid)
 	}
 }
 
-public call_strike(playerID) 
+public call_strike(playerID)
 {
 
-       if(!get_bit(g_hasItem, playerID) || get_user_weapon(playerID) != CSW_KNIFE) 
+       if(!get_bit(g_hasItem, playerID) || get_user_weapon(playerID) != CSW_KNIFE)
          return;
 
-         
+
        static Float:origin[3]
 
        fm_get_aim_origin(playerID, origin)
 
-       new bomb = create_entity("info_target")   
+       new bomb = create_entity("info_target")
 
        entity_set_string(bomb, EV_SZ_classname, "Bomb") // set name
        entity_set_edict(bomb, EV_ENT_owner, playerID) // set owner
-       entity_set_origin(bomb, origin) // start posistion 
-        
+       entity_set_origin(bomb, origin) // start posistion
+
        line(origin)
 
-       emit_sound(playerID,CHAN_AUTO, "ambience/siren.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)  
+       emit_sound(playerID,CHAN_AUTO, "ambience/siren.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 
        remove_item(playerID);
 
        set_task(5.0, "stop_siren")
        set_task(6.0, "jet_sound", playerID)
- 
+
        set_task(6.0, "make_bomb", playerID)
        set_task(7.0, "removebomb", playerID)
 
@@ -243,37 +243,37 @@ public call_strike(playerID)
 
 public make_bomb(playerID)
 {
-        
+
        new ent
 
        ent  = find_ent_by_class(-1,"Bomb")
 
        static Float:origin[3]
-       pev(ent, pev_origin, origin)  
+       pev(ent, pev_origin, origin)
 
        CRT_explosion(origin)
        emit_sound(ent, CHAN_WEAPON, "weapons/mortarhit.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
-       emit_sound(ent, CHAN_VOICE, "weapons/mortarhit.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM); 
+       emit_sound(ent, CHAN_VOICE, "weapons/mortarhit.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
 
        for (new i = 1; i < get_maxplayers(); i++)
        {
 
-         shake_screen(i) 
+         shake_screen(i)
 
          if(is_user_alive(i) && entity_range(i, ent) <= get_pcvar_float(strike_radius) && cs_get_user_team(playerID) != cs_get_user_team(i))
            {
 
              if(get_pcvar_num(strike_mode) == 1)
-             {        
-               ExecuteHam(Ham_TakeDamage, i, 0, playerID, get_pcvar_float(strike_dam), DMG_BULLET)		
+             {
+               ExecuteHam(Ham_TakeDamage, i, 0, playerID, get_pcvar_float(strike_dam), DMG_BULLET)
              }
 
              else
 
              {
-               ExecuteHam(Ham_Killed, i, 0, playerID)                
-  
-             } 
+               ExecuteHam(Ham_Killed, i, 0, playerID)
+
+             }
 
 
            }
@@ -282,12 +282,12 @@ public make_bomb(playerID)
 
 
 }
-  
+
 public stop_siren()
 {
 
 
- client_cmd(0,"stopsound") // stops sound on all clients 
+ client_cmd(0,"stopsound") // stops sound on all clients
 
 
 
@@ -298,7 +298,7 @@ public jet_sound(playerID)
 
 
  emit_sound(playerID,CHAN_AUTO, "ambience/jetflyby1.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
- 
+
 
 
 }
@@ -334,8 +334,8 @@ public line(const Float:origin[3])
        write_byte(0)		        // color: blue
        write_byte(200)			// brightness
        write_byte(0)			// scroll speed in 0.1's
-       message_end() 
- 
+       message_end()
+
 }
 
 public CRT_explosion(const Float:origin[3])
@@ -344,7 +344,7 @@ public CRT_explosion(const Float:origin[3])
                 new NonFloatEndOrigin[3];
 		NonFloatEndOrigin[0] = floatround(origin[0]);
 		NonFloatEndOrigin[1] = floatround(origin[1]);
-		NonFloatEndOrigin[2] = floatround(origin[2]); 
+		NonFloatEndOrigin[2] = floatround(origin[2]);
 
 
                 message_begin(MSG_BROADCAST, SVC_TEMPENTITY);
@@ -442,8 +442,8 @@ public CRT_explosion(const Float:origin[3])
 stock shake_screen(playerID)
 {
 	message_begin(MSG_ONE, get_user_msgid("ScreenShake"),{0,0,0}, playerID)
-	write_short(255<< 14 ) //ammount 
-        write_short(10 << 14) //lasts this long 
-        write_short(255<< 14) //frequency 
-	message_end()	
+	write_short(255<< 14 ) //ammount
+        write_short(10 << 14) //lasts this long
+        write_short(255<< 14) //frequency
+	message_end()
 }

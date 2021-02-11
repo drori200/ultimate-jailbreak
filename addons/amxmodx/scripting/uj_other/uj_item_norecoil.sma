@@ -13,7 +13,7 @@
 #include <uj_colorchat>
 
 new const PLUGIN_NAME[] = "[UJ] Item - No Recoil";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const ITEM_NAME[] = "No Recoil";
@@ -70,7 +70,7 @@ public uj_fw_items_select_pre(playerID, itemID, menuID)
   if (get_bit(g_hasItem, playerID)) {
     return UJ_ITEM_NOT_AVAILABLE;
   }
-  
+
   return UJ_ITEM_AVAILABLE;
 }
 
@@ -141,14 +141,14 @@ public server_frame()
 {
   new Players[32], iNum;
   get_players(Players, iNum, "a");
-  
+
   for(new i = 0; i < iNum; i++)
   {
     new playerID = Players[i];
     if(!get_bit(g_hasItem, playerID)) {
       continue;
     }
-    
+
     if(get_user_button(playerID) & IN_ATTACK) {
       entity_set_vector (playerID, EV_VEC_punchangle, Float:{0.0, 0.0, 0.0});
     }

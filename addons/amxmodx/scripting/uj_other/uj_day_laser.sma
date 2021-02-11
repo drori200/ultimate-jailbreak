@@ -68,7 +68,7 @@ new err_money[] = "[AG] Laser shots cost $%d each" // %d = money cost
 #define IsPlayer(%1) (FIRST_PLAYER_ID <= %1 <= g_iMaxPlayers)
 
 new const PLUGIN_NAME[] = "[UJ] Day - Laser Gun Day ";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const DAY_NAME[] = "Laser Gun Day";
@@ -139,7 +139,7 @@ public plugin_precache()
 	laser = precache_model("sprites/laserbeam.spr")
 	precache_sound("weapons/electro5.wav")
 	precache_sound("weapons/xbow_hitbod2.wav")
-	return PLUGIN_CONTINUE	
+	return PLUGIN_CONTINUE
 }
 
 public uj_fw_days_select_pre(playerID, dayID, menuID)
@@ -148,18 +148,18 @@ public uj_fw_days_select_pre(playerID, dayID, menuID)
 	if (dayID != g_day) {
 		return UJ_DAY_AVAILABLE;
 	}
-	
+
 	// Only display if in the parent menu we recognize
 	if (menuID != g_menuSpecial) {
 		return UJ_DAY_DONT_SHOW;
 	}
-	
+
 	// If we *can* show the menu, but it's already enabled,
 	// then have it be unavailable
 	if (g_dayEnabled) {
 		return UJ_DAY_NOT_AVAILABLE;
 	}
-	
+
 	return UJ_DAY_AVAILABLE;
 }
 
@@ -168,7 +168,7 @@ public uj_fw_days_select_post(playerID, dayID)
 	// This is not our item
 	if (dayID != g_day)
 		return;
-	
+
 	start_day();
 }
 
@@ -177,7 +177,7 @@ public uj_fw_days_end(dayID)
 	// If dayID refers to our day and our day is enabled
 	if(dayID == g_day && g_dayEnabled) {
 		end_day();
-		
+
 	}
 }
 
@@ -185,7 +185,7 @@ start_day()
 {
 if (!g_dayEnabled) {
 	g_dayEnabled = true;
-	
+
 	uj_core_block_weapon_pickup(0, true);
 	uj_chargers_block_heal(0, true);
 	uj_chargers_block_armor(0, true);
@@ -211,13 +211,13 @@ uj_chargers_block_armor(0, false);
 public Player_AddPlayerItem(const playerID, const iEntity)  //anti gun glitch
 {
 	new iWeapID = cs_get_weapon_id( iEntity );
-	
+
 	if( !iWeapID )
 		return HAM_IGNORED;
-	
+
 	static CsTeams:team;
 	team = cs_get_user_team(playerID);
-	if (g_dayEnabled) 
+	if (g_dayEnabled)
 	{
 		switch(team)
 		{
@@ -234,10 +234,10 @@ public Player_AddPlayerItem(const playerID, const iEntity)  //anti gun glitch
 				return HAM_SUPERCEDE;
 			}
 		}
-		
+
 		return HAM_IGNORED;
 	}
-	
+
 	return HAM_IGNORED;
 }
 
@@ -587,10 +587,10 @@ public fire_laser(id){
 	else if(laser_heat[id] < ((get_cvar_num("amx_laser_maxtemp") - 500) / 147)-5){
 		new lmessage[100]
 		if(get_cvar_num("amx_laser_buy") == 1) {
-			format(lmessage, 99, "Laser Temperature: %d °F",(laser_heat[id] * 147)+ 500)
+			format(lmessage, 99, "Laser Temperature: %d ï¿½F",(laser_heat[id] * 147)+ 500)
 		}
 		else {
-			format(lmessage, 99, "Laser Power Level: %d  <+>  Temperature: %d °F",laser_shots[id],(laser_heat[id] * 147)+ 500)
+			format(lmessage, 99, "Laser Power Level: %d  <+>  Temperature: %d ï¿½F",laser_shots[id],(laser_heat[id] * 147)+ 500)
 		}
 		//set_hudmessage(250,250,20, -1.0, 0.35, 0, 0.02, 3.0, 0.4, 0.3, 16)
 		//show_hudmessage(id,lmessage)
@@ -1753,12 +1753,12 @@ public laser_stats_a(id){
 ************************************************************/
 
 public plugin_init() {
-	
+
 	register_plugin(PLUGIN_NAME, PLUGIN_VERS, PLUGIN_AUTH);
-	
+
 
 	g_menuSpecial = uj_menus_get_menu_id("Special Days");
-	
+
 
 	//g_iMaxPlayers   = get_maxplayers();
 	register_concmd("amx_lasers","admin_lasers",ADMIN_LEVEL_C,"- toggles laser guns mode on and off")
@@ -1789,11 +1789,11 @@ public plugin_init() {
 	register_clcmd("say /laserstatsme","laser_stats_mee")
 	register_clcmd("amx_firelasergun","fire_laser",0,"- fires the laser gun if the plugin is enabled")
 	register_clcmd("amx_firelazergun","fire_laser")
-	//register_clcmd("drop", "fire_laser") 
+	//register_clcmd("drop", "fire_laser")
 	register_clcmd("say","HandleSay")
 	register_event("Damage", "laser_sw_con", "b", "2!0", "3=0", "4!0")
 	register_event("ResetHUD", "new_spawn", "b")
-		
+
 #if defined CSTRIKE
 	register_logevent("round_start", 2, "1=Round_Start")
 	register_logevent("round_end", 2, "1=Round_End")
@@ -1842,7 +1842,7 @@ public plugin_init() {
 	set_vaultdata("EJL_LASER_MONTH",month)
 
 	csmod_running = cstrike_running() ? true : false
-	
+
 	if(csmod_running){
 		load_laser_stats()
 	}
@@ -1903,17 +1903,17 @@ public FwdPlayerObjectCapsPost(id)
 	{
 		static Float: flGametime;
 		flGametime = get_gametime();
-		if((g_flLastLaserAttack[id] + 0.5) < flGametime)	
+		if((g_flLastLaserAttack[id] + 0.5) < flGametime)
 		{
 		fire_laser(id);
 		emit_sound(0,CHAN_ITEM, "weapons/electro5.wav", 1.0, ATTN_NORM, 0, PITCH_NORM)
 		g_flLastLaserAttack[id] = flGametime;
 		return PLUGIN_HANDLED;
 		}
-		
+
 		//g_flLastLaserAttack[id] = flGametime;
 	}
-	
+
 	return PLUGIN_HANDLED;
 
 }
