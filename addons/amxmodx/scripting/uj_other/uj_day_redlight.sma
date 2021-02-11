@@ -1,4 +1,4 @@
-#include <amxmodx> 
+#include <amxmodx>
 #include <amxmisc>
 #include <cstrike>
 #include <dhudmessage>
@@ -9,7 +9,7 @@
 #include <uj_freedays>
 #include <uj_menus>
 
-new const PLUGIN_NAME[] = "[UJ] Day - Red Light Green Light";
+new const PLUGIN_NAME[] = "[sG] Day - Red Light Green Light";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

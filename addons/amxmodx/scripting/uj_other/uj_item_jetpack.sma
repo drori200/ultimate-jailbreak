@@ -12,7 +12,7 @@
 #include <uj_items>
 #include <uj_colorchat>
 
-new const PLUGIN_NAME[] = "[UJ] Item - Jetpack";
+new const PLUGIN_NAME[] = "[sG] Item - Jetpack";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

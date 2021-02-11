@@ -21,7 +21,7 @@
 #define FLASH_BLUE	255
 //#define FLASH_ALPHA	255
 
-new const PLUGIN_NAME[] = "[UJ] Item - Blinding Flashlight";
+new const PLUGIN_NAME[] = "[sG] Item - Blinding Flashlight";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

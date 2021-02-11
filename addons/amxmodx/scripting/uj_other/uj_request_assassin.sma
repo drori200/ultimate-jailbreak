@@ -8,7 +8,7 @@
 #include <uj_menus>
 #include <uj_requests>
 
-new const PLUGIN_NAME[] = "[UJ] Request - Assassin";
+new const PLUGIN_NAME[] = "[sG] Request - Assassin";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

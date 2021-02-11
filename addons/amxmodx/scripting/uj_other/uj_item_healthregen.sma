@@ -19,7 +19,7 @@
 #define REGEN_AMOUNTOTHERS 2.0
 #define REGEN_DISTANCE 200.0
 
-new const PLUGIN_NAME[] = "[UJ] Item - Health Regeneration";
+new const PLUGIN_NAME[] = "[sG] Item - Health Regeneration";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

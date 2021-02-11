@@ -7,7 +7,7 @@
 
 
 
-new const PLUGIN_NAME[] = "[UJ] Menu Entry - Toggle Cells";
+new const PLUGIN_NAME[] = "[sG] Menu Entry - Toggle Cells";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

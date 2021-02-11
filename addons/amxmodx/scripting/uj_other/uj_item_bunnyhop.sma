@@ -17,7 +17,7 @@
 
 #define PLAYER_JUMP		6
 
-new const PLUGIN_NAME[] = "[UJ] Item - Bunny Hop";
+new const PLUGIN_NAME[] = "[sG] Item - Bunny Hop";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

@@ -4,7 +4,7 @@
 #include <uj_menus>
 
 new const PLUGIN_NAME[] = "UJ | Activity - Push";
-new const PLUGIN_AUTH[] = "eDeloa";
+new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
 new const MENU_NAME[] = "Toggle Push";
@@ -39,7 +39,7 @@ public uj_fw_menus_select_pre(playerID, menuID, entryID)
   // Do not show if it is not in this specific parent menu
   if (menuID != g_menuActivities)
     return UJ_MENU_DONT_SHOW;
-  
+
   return UJ_MENU_AVAILABLE;
 }
 
@@ -48,7 +48,7 @@ public uj_fw_menus_select_post(playerID, menuid, entryID)
   // This is not our item
   if (g_entryID != entryID)
     return;
-  
+
   // Toggle push
   g_pushEnabled = !g_pushEnabled;
   new statusString[16];

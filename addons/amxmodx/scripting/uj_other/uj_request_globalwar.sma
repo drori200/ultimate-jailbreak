@@ -28,7 +28,7 @@ const HAS_SHIELD = 1<<24;
 #define cs_get_user_team_index(%0)  get_pdata_int(%0, m_iTeam, XO_PLAYER)
 #define cs_set_user_team_index(%0,%1) set_pdata_int(%0, m_iTeam, %1, XO_PLAYER)
 
-new const PLUGIN_NAME[] = "[UJ] Request - Global War";
+new const PLUGIN_NAME[] = "[sG] Request - Global War";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

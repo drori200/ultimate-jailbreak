@@ -17,7 +17,7 @@
 #define FIRST_PLAYER_ID 1
 #define IsPlayer(%1) (FIRST_PLAYER_ID <= %1 <= g_iMaxPlayers)
 
-new const PLUGIN_NAME[] = "[UJ] Day - Headshot Battle";
+new const PLUGIN_NAME[] = "[sG] Day - Headshot Battle";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

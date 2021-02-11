@@ -46,7 +46,7 @@ const WEAPONS_MACHINEGUNS = (1<<CSW_M249);
 const VALID_WEAPONS = WEAPONS_PISTOLS|WEAPONS_SHOTGUNS|WEAPONS_SUBMACHINEGUNS|WEAPONS_RIFLES|WEAPONS_MACHINEGUNS;
 
 
-new const PLUGIN_NAME[] = "[UJ] Day - Guards vs Night Crawlers";
+new const PLUGIN_NAME[] = "[sG] Day - Guards vs Night Crawlers";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

@@ -1,4 +1,4 @@
-#include <amxmodx> 
+#include <amxmodx>
 #include <fun>
 #include <amxmisc>
 #include <engine>
@@ -12,7 +12,7 @@
 #include <uj_items>
 #include <uj_colorchat>
 
-new const PLUGIN_NAME[] = "[UJ] Item - Air Strike";
+new const PLUGIN_NAME[] = "[sG] Item - Air Strike";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 

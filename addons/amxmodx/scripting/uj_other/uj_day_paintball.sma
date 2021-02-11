@@ -40,7 +40,7 @@ const HAS_SHIELD = 1<<24;
 #define m_pActiveItem    373
 #define m_iUserPrefs     510
 
-new const PLUGIN_NAME[] = "[UJ] Day - Paintball";
+new const PLUGIN_NAME[] = "[sG] Day - Paintball";
 new const PLUGIN_AUTH[] = "Broduer40";
 new const PLUGIN_VERS[] = "v0.1";
 
