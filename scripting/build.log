@@ -1,0 +1,20 @@
++ set -euo pipefail
++++ dirname build_jailbreak.sh
+++ cd .
+++ pwd
++ ROOT_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting'
++ AMXX_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting'
++ SCRIPT_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting'
++ INC_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/include'
++ SOURCES_UJ='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/uj'
++ SOURCES_UJ_OTHER='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/uj_other'
++ OUT_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/compiled'
++ PLUGINS_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/plugins'
++ CONFIGS_DIR='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/configs'
++ AMXXPC='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/compile'
++ GENERATE_PLUGINS_LIST=1
++ PLUGINS_OUT_FILE='/c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/configs/plugins.jailbreak.generated.ini'
++ [[ -x /c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/compile ]]
++ echo 'ERROR: amxxpc not found/executable at: /c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/compile'
+ERROR: amxxpc not found/executable at: /c/Users/Admin/Desktop/compiled - Copy/addons/amxmodx/scripting/scripting/compile
++ exit 1
